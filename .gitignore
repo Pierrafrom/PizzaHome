@@ -1,3 +1,7 @@
 .idea/
 
 composer.lock
+
+vendor/
+
+config/.env

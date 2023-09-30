@@ -1,5 +1,9 @@
 {
     "require": {
-        "altorouter/altorouter": "^2.0"
+        "altorouter/altorouter": "^2.0",
+        "vlucas/phpdotenv": "^5.5"
+    },
+    "require-dev": {
+        "filp/whoops": "^2.15"
     }
 }
