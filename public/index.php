@@ -1,24 +1,13 @@
 <?php
 
-require_once dirname(__DIR__) . '/vendor/autoload.php';
-require_once dirname(__DIR__) . '/config/error.php';
+require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
-use Dotenv\Dotenv;
-
-$dotenv = Dotenv::createImmutable(dirname(__DIR__) . '/config');
+$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config');
 $dotenv->load();
 
-$environment = getenv('ENVIRONMENT');
+require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'error.php';
 
-$router = new AltoRouter();
-
-try {
-    $router->map('GET', '/', function () {
-        require dirname(__DIR__) . '/views/pages/home.php';
-    });
-} catch (Exception $e) {
-    echo $e->getMessage();
-}
-
-$match = $router->match();
-$match['target']();
+$router = new App\Router(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'views');
+$router
+    ->get('/', 'pages/home')
+    ->run();

@@ -1,4 +1,9 @@
 {
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
     "require": {
         "altorouter/altorouter": "^2.0",
         "vlucas/phpdotenv": "^5.5"
