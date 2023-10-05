@@ -1,0 +1,27 @@
+@font-face {
+    font-family: 'Lobster Two';
+    src: local('Lobster Two Bold'), local('LobsterTwo-Bold'), url('/font/LobsterTwo-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Barlow';
+    src: local('Barlow Bold'), local('Barlow-Bold'), url('/font/Barlow-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Barlow';
+    src: local('Barlow SemiBold'), local('Barlow-SemiBold'), url('/font/Barlow-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Barlow';
+    src: local('Barlow Regular'), local('Barlow-Regular'), url('/font/Barlow-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}

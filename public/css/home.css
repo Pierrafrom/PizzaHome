@@ -1,0 +1,76 @@
+@charset "UTF-8";
+/* CSS Document */
+
+@import url('font.css');
+
+/* Home banner */
+.home-banner {
+    width: 100%;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    margin-top: 60px;
+}
+
+.home-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    z-index: 0;
+    filter: brightness(0.5);
+}
+
+.home-banner h1,
+.home-banner p,
+.home-banner a {
+    position: relative;
+    z-index: 1;
+}
+
+.home-banner h1 {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.home-banner p {
+    text-align: center;
+    margin: 20px 0;
+    font-weight: 400;
+    font-size: 1.5rem;
+}
+
+.home-banner .btn-primary {
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-align: center;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 30px;
+    padding: 10px 20px;
+}
+
+.home-banner .btn-secondary {
+    background-color: #333;
+}
+
+/*Responsive*/
+@media screen and (min-width: 1420px) {
+    .home-banner {
+        height: calc(100vh - 60px);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .home-banner {
+        height: 400px;
+    }
+
+    .home-banner .btn-primary,
+    .home-banner p {
+        font-size: 1rem;
+    }
+}
