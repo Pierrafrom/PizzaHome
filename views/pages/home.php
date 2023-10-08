@@ -1,9 +1,9 @@
 <?php
 $title = "Home";
-$cssFile = "home.css";
+$cssFiles = ["banner.css", "home.css"];
 ?>
 
-<div class="home-banner">
+<div class="banner home-banner">
     <img src="/img/homeBanner.webp" alt="An Experienced Chef Bakes Pizza with a Special Giant Spatula.">
     <h1>Pizza Home</h1>
     <p>"Where Every Bite Takes You to Italy."</p>

@@ -1,108 +1,55 @@
-// Selectors constants
-const MENU_TOGGLE_SELECTOR = '.menu-toggle';
-const HAMBURGER_CHECKBOX_SELECTOR = 'hamburger-menu';
-const NAV_SELECTOR = 'nav';
-const NAV_LIST_ITEMS_SELECTOR = 'li:not(.menu-toggle, .logo)';
-const AVATAR_CONTAINER_SELECTOR = '.avatar-container';
-const CONNEXION_CONTAINER_SELECTOR = '.connexion-container';
-const LOGIN_BUTTON_ID = 'login-button';
-const SIGNUP_BUTTON_ID = 'signup-button';
-const LOGOUT_BUTTON_ID = 'logout-button';
-const AVATAR_MENU= 'avatar-menu';
+document.addEventListener('DOMContentLoaded', function () {
+    const navContent = document.getElementById('nav-content');
+    const hamburgerIcon = document.getElementById('hamburger-icon');
+    const hamburgerCheckBox = document.getElementById('hamburger-checkbox');
+    const avatarImage = document.getElementById('avatar-img');
+    const userDropdown = document.getElementById('user-dropdown');
+    let isUserDropdownVisible = false;
 
-// DOM element selection
-const menuToggle = document.querySelector(MENU_TOGGLE_SELECTOR);
-const hamburgerCheckbox = document.getElementById(HAMBURGER_CHECKBOX_SELECTOR);
-const nav = document.querySelector(NAV_SELECTOR);
-const navListItems = nav.querySelectorAll(NAV_LIST_ITEMS_SELECTOR);
-const avatarContainer = document.querySelector(AVATAR_CONTAINER_SELECTOR);
-const connexionContainer = document.querySelector(CONNEXION_CONTAINER_SELECTOR);
-const loginButton = document.getElementById(LOGIN_BUTTON_ID);
-const signupButton = document.getElementById(SIGNUP_BUTTON_ID);
-const logoutButton = document.getElementById(LOGOUT_BUTTON_ID);
-const avatarMenu = document.getElementById(AVATAR_MENU);
-
-let isConnected = false; // TODO: Replace with a call to the server to check if the user is connected
-
-// Function to expand the menu
-function toggleMenu() {
-    nav.style.height = '350px'; // Expand the navigation height
-    navListItems.forEach(item => {
-        item.style.display = 'flex'; // Display each list item
-    });
-    if (isConnected) {
-        avatarContainer.style.display = 'flex';
-        connexionContainer.style.display = 'none';
-    } else {
-        avatarContainer.style.display = 'none';
-        connexionContainer.style.display = 'flex';
+    function toggleHamburgerMenu() {
+        if (window.innerWidth < 768) {
+            hamburgerIcon.classList.remove('hide');
+            hamburgerCheckBox.checked = false;
+            navContent.classList.remove('expand', 'show-flex');
+            navContent.classList.add('collapse', 'hide');
+        } else {
+            hamburgerIcon.classList.add('hide');
+            hamburgerCheckBox.checked = false;
+            navContent.classList.remove('expand', 'hide');
+            navContent.classList.add('collapse', 'show-flex');
+        }
     }
-}
 
-// Function to hide the menu
-function hideMenu() {
-    nav.style.height = '60px'; // Collapse the navigation height
-    navListItems.forEach(item => {
-        item.style.display = 'none'; // Hide each list item
-    });
-    updateNavigation();
-}
+    toggleHamburgerMenu();
 
-// Function to reset the menu based on screen width
-function resetMenu() {
-    if (window.innerWidth > 768) {
-        // If the screen width is greater than 768 pixels (PC view)
-        nav.style.height = '60px'; // Collapse the navigation height
-        hamburgerCheckbox.checked = false; // Uncheck the hamburger checkbox
-        menuToggle.style.display = 'none'; // Hide the menu toggle button
-        navListItems.forEach(item => {
-            item.style.display = 'flex'; // Display each list item
+    function toggleMobileMenu() {
+        if (hamburgerCheckBox.checked) {
+            navContent.classList.remove('collapse', 'hide');
+            navContent.classList.add('expand', 'show-flex');
+        } else {
+            navContent.classList.remove('expand', 'show-flex');
+            navContent.classList.add('collapse', 'hide');
+        }
+    }
+
+    // Toggle user dropdown on avatar click
+    if (avatarImage && userDropdown) {
+        avatarImage.addEventListener('click', function () {
+            if (isUserDropdownVisible) {
+                userDropdown.classList.remove('show-flex');
+                userDropdown.classList.add('hide');
+            } else {
+                userDropdown.classList.remove('hide');
+                userDropdown.classList.add('show-flex');
+            }
+            isUserDropdownVisible = !isUserDropdownVisible;
         });
-    } else {
-        // If the screen width is 768 pixels or fewer (mobile view)
-        menuToggle.style.display = 'flex'; // Display the menu toggle button
-        hamburgerCheckbox.checked = false; // Uncheck the hamburger checkbox
-        hideMenu(); // Hide the menu
     }
-    updateNavigation();
-}
 
-// Function to update the navigation based on connection status
-function updateNavigation() {
-    if (isConnected && (window.innerWidth > 768 || hamburgerCheckbox.checked === true)) { // TODO: Replace with a call to the server to check if the user is connected
-        avatarContainer.style.display = 'flex';
-        connexionContainer.style.display = 'none';
-    } else if (window.innerWidth > 768 || hamburgerCheckbox.checked === true) {
-        avatarContainer.style.display = 'none';
-        connexionContainer.style.display = 'flex';
-    }
-}
+    window.addEventListener('resize', toggleHamburgerMenu);
+    hamburgerCheckBox.addEventListener('click', toggleMobileMenu);
 
-// Add event listeners
-window.addEventListener('resize', resetMenu);
-window.addEventListener('load', resetMenu);
-
-hamburgerCheckbox.addEventListener('change', () => {
-    if (hamburgerCheckbox.checked) {
-        toggleMenu(); // If checkbox is checked, expand the menu
-    } else {
-        hideMenu(); // If checkbox is unchecked, hide the menu
-    }
+    // remove the display none from the nav-content (we add it to prevent the content from flashing on the screen)
+    if (navContent && window.innerWidth > 768)
+        navContent.classList.remove('hide');
 });
-
-loginButton.addEventListener('click', () => {
-    isConnected = true;
-    updateNavigation();
-});
-
-signupButton.addEventListener('click', () => {
-    isConnected = true;
-    updateNavigation();
-});
-
-logoutButton.addEventListener('click', () => {
-    isConnected = false;
-    avatarMenu.checked = false;
-    updateNavigation();
-});
-
