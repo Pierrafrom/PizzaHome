@@ -35,3 +35,49 @@
     border-bottom: var(--primary) solid 2px;
     border-top: var(--text) solid 2px;
 }
+
+.tab-content {
+    background: url('/img/background-menu.png'), #fff repeat-y;
+    width: 100%;
+    max-width: 2000px;
+    margin: auto;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tab-content h2 {
+    color: var(--primary);
+    font-family: 'Lobster Two', cursive;
+    font-size: 4rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.pizza-item {
+    width: 100%;
+    color: black;
+    padding: 1em 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.pizza-item div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 50%;
+}
+
+.pizza-item div p strong{
+    font-weight: 600;
+}
+
+.pizza-item h3{
+    font-family: 'Barlow', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+

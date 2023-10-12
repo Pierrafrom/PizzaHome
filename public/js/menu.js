@@ -1,24 +1,31 @@
-// selectors constants
-const PIZZA_TAB_SELECTOR = 'pizza-tab';
-const DRINK_TAB_SELECTOR = 'drink-tab';
-const DESSERT_TAB_SELECTOR = 'dessert-tab';
-const TABS_SELECTOR = '.tabs li a';
+document.addEventListener('DOMContentLoaded', function () {
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
 
-// DOM element selection
-PIZZA_TAB = document.getElementById(PIZZA_TAB_SELECTOR);
-DRINK_TAB = document.getElementById(DRINK_TAB_SELECTOR);
-DESSERT_TAB = document.getElementById(DESSERT_TAB_SELECTOR);
-TABS = document.querySelectorAll(TABS_SELECTOR);
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // annuler le comportement du lien par défaut
+            event.preventDefault();
+            // Masquer tous les contenus de tab
+            tabContents.forEach(content => {
+                content.classList.remove('show-flex');
+                content.classList.add('hide');
+            });
 
-TABS.forEach(tab => {
-    tab.addEventListener('click', () => {
-        TABS.forEach(tab => {
-            tab.classList.remove('active-tab');
+            // Afficher le contenu du tab correspondant
+            const targetId = tab.getAttribute('href').substring(1);
+            const targetContent = document.getElementById(targetId);
+            targetContent.classList.remove('hide');
+            targetContent.classList.add('show-flex');
+
+            // Mettre à jour la classe active-tab
+            tabs.forEach(t => t.classList.remove('active-tab'));
+            tab.classList.add('active-tab');
         });
-        tab.classList.add('active-tab');
     });
 });
 
-window.addEventListener('load', () => {
-    TABS[0].classList.add('active-tab');
-});
+
+
+
+

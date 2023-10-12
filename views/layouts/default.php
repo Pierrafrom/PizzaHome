@@ -26,7 +26,7 @@
 <body>
 
 <?php
-$isConnected = true;
+$isConnected = false;
 ?>
 
 <header>
@@ -52,8 +52,8 @@ $isConnected = true;
                 </div>
             <?php else: ?>
                 <ul class="nav-links">
-                    <li><a href="#"><span>Home</span></a></li>
-                    <li><a href="#">Menu</a></li>
+                    <li><a href="/"><span>Home</span></a></li>
+                    <li><a href="/menu">Menu</a></li>
                     <li><a href="#">Cart</a></li>
                 </ul>
                 <div class="auth-buttons">

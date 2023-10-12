@@ -6,7 +6,8 @@
     },
     "require": {
         "altorouter/altorouter": "^2.0",
-        "vlucas/phpdotenv": "^5.5"
+        "vlucas/phpdotenv": "^5.5",
+      "ext-pdo": "*"
     },
     "require-dev": {
         "filp/whoops": "^2.15"

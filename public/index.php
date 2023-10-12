@@ -10,6 +10,8 @@ $dotenv->load();
 // Include error handling configuration from the 'config' directory.
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'error.php';
 
+require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'DB_Connection.php';
+
 // Create a new instance of the Router class, specifying the 'views' directory as its base path.
 $router = new App\Router(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'views');
 
