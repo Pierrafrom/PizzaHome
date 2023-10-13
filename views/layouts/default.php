@@ -32,7 +32,7 @@ $isConnected = false;
 <header>
     <nav>
         <div><a href="/"><img src="/img/logo.svg" alt="Logo"></a></div>
-        <div id="nav-content" class="nav-content collapse hide">
+        <div id="nav-content" class="nav-content hide">
             <?php if ($isConnected): ?>
                 <ul class="nav-links" style="width: calc(100% - 48px);">
                     <li><a href="/"><span>Home</span></a></li>

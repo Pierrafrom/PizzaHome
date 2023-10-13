@@ -115,14 +115,6 @@ nav {
     top: 0;
 }
 
-nav .expand {
-    height: calc(100vh - 40px)
-}
-
-nav .collapse {
-    height: auto;
-}
-
 nav div a img {
     height: 48px;
     width: 48px;
@@ -235,6 +227,7 @@ nav div a img {
     .nav-content {
         flex-direction: column;
         padding: calc(100vh / 9) 0;
+        height: 100vh;
     }
 
     .nav-links {

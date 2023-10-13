@@ -2,80 +2,125 @@
 
 namespace App;
 
-use AltoRouter;
-use Exception;
-
+/**
+ * Class Router
+ *
+ * Handles the routing of requests to the appropriate controller and method.
+ *
+ * @package App
+ */
 class Router
 {
-    // Private attribute to store the path to views directory.
-    private string $viewPath;
-
-    // Private attribute to store an instance of AltoRouter.
-    private AltoRouter $router;
+    /**
+     * @var array An associative array of routes where the key is the HTTP method
+     *            and the value is an array of URL patterns and their associated
+     *            controllers and methods.
+     */
+    private array $routes = [];
 
     /**
-     * Constructor for the Router class.
+     * @var string The path to the view files.
+     */
+    private string $viewPath;
+
+    /**
+     * @var string Namespace prefix for controller classes.
+     */
+    private string $controllerNamespace = '\\App\\controllers\\';
+
+    /**
+     * Router constructor.
      *
-     * @param string $viewPath The path to the view's directory.
+     * @param string $viewPath The path to the view files.
      */
     public function __construct(string $viewPath)
     {
-        // Initialize the viewPath attribute with the provided views directory path.
         $this->viewPath = $viewPath;
-
-        // Create a new instance of AltoRouter for routing.
-        $this->router = new AltoRouter();
     }
 
     /**
-     * Define a GET route.
+     * Add a GET route.
      *
-     * @param string      $url   The URL path for the route.
-     * @param string      $view  The name of the associated view.
-     * @param string|null $name  (Optional) The name of the route.
+     * @param string $url The URL pattern to match.
+     * @param string $controller The controller to use.
+     * @param string $method The method of the controller to call (default is 'index').
      *
-     * @return self Returns the Router instance for method chaining.
+     * @return $this
      */
-    public function get(string $url, string $view, ?string $name = null): self
+    public function get(string $url, string $controller, string $method = 'index'): self
     {
-        try {
-            // Map a GET route with the provided URL, associated view, and optional name.
-            $this->router->map('GET', $url, $view, $name);
-        } catch (Exception $e) {
-            // Handle exceptions and display error messages.
-            echo $e->getMessage();
-        }
+        return $this->addRoute('GET', $url, $controller, $method);
+    }
 
-        // Return the Router instance to allow method chaining.
+    /**
+     * Add a POST route.
+     *
+     * @param string $url The URL pattern to match.
+     * @param string $controller The controller to use.
+     * @param string $method The method of the controller to call (default is 'index').
+     *
+     * @return $this
+     */
+    public function post(string $url, string $controller, string $method = 'index'): self
+    {
+        return $this->addRoute('POST', $url, $controller, $method);
+    }
+
+    /**
+     * Add a route.
+     *
+     * @param string $httpMethod The HTTP method (GET, POST, etc.)
+     * @param string $url The URL pattern to match.
+     * @param string $controller The controller to use.
+     * @param string $method The method of the controller to call.
+     *
+     * @return $this
+     */
+    private function addRoute(string $httpMethod, string $url, string $controller, string $method): self
+    {
+        $this->routes[$httpMethod][$url] = ['controller' => $controller, 'method' => $method];
         return $this;
     }
 
     /**
-     * Run the router and render the associated view.
+     * Run the router: match the requested URL against the routes and call the
+     * associated controller method, or throw an Exception if no match is found.
      *
-     * @return self Returns the Router instance for method chaining.
+     * @return $this
+     *
+     * @throws \Exception When a route or method is not found.
      */
     public function run(): self
     {
-        // Attempt to match the current request against defined routes.
-        $match = $this->router->match();
+        $requestedMethod = $_SERVER['REQUEST_METHOD'];
+        $requestedPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-        // Get the target view associated with the matched route.
-        $view = $match['target'];
+        try {
+            if (!isset($this->routes[$requestedMethod][$requestedPath])) {
+                throw new \Exception("404 Not Found", 404);
+            }
 
-        // Start output buffering to capture the view content.
-        ob_start();
+            $route = $this->routes[$requestedMethod][$requestedPath];
+            $fullControllerName = $this->controllerNamespace . $route['controller'];
 
-        // Include the associated view file.
-        require $this->viewPath . DIRECTORY_SEPARATOR . $view . '.php';
+            if (!class_exists($fullControllerName)) {
+                throw new \Exception("500 Internal Server Error - Controller Not Found", 500);
+            }
 
-        // Get and clean the buffered view content.
-        $content = ob_get_clean();
+            $controller = new $fullControllerName($this->viewPath);
+            $method = $route['method'];
 
-        // Include the default layout file and display the view content.
-        require $this->viewPath . DIRECTORY_SEPARATOR . 'layouts/default.php';
+            if (!method_exists($controller, $method)) {
+                throw new \Exception("500 Internal Server Error - Method Not Found", 500);
+            }
 
-        // Return the Router instance to allow method chaining.
-        return $this;
+            $controller->$method();
+            return $this;
+
+        } catch (\Exception $e) {
+            http_response_code($e->getCode());
+            echo $e->getMessage();
+            return $this;
+        }
     }
 }

@@ -14,24 +14,22 @@ $cssFiles = ["banner.css", "home.css"];
 </div>
 
 <?php
-DB_Connection::connect();
-
 try {
-    $stmt = DB_Connection::getPDO()->query("SELECT * FROM CLIENT");
-
-    $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Utilisation de la méthode 'query' pour récupérer tous les clients sous forme de tableau associatif
+    $clients = DB_Connection::query("SELECT * FROM CLIENT");
 
     echo '<table>';
-    echo '<tr><th>ID</th><th>Nom</th><th>Email</th></tr>';
+    echo '<tr><th>ID</th><th>First Name</th><th>Last Name</th></tr>';
     foreach ($clients as $client) {
         echo '<tr>';
-        echo '<td>' . $client['id'] . '</td>';
-        echo '<td>' . $client['first_name'] . '</td>';
-        echo '<td>' . $client['last_name'] . '</td>';
+        echo '<td>' . htmlspecialchars($client['id']) . '</td>';
+        echo '<td>' . htmlspecialchars($client['first_name']) . '</td>';
+        echo '<td>' . htmlspecialchars($client['last_name']) . '</td>';
         echo '</tr>';
     }
     echo '</table>';
 } catch (PDOException $e) {
     echo "Erreur : " . $e->getMessage();
 }
+
 ?>

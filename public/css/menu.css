@@ -53,7 +53,7 @@
     letter-spacing: 1px;
 }
 
-.pizza-item {
+.tab-item {
     width: 100%;
     color: black;
     padding: 1em 0;
@@ -63,18 +63,18 @@
     align-items: center;
 }
 
-.pizza-item div {
+.tab-item div {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     width: 50%;
 }
 
-.pizza-item div p strong{
+.tab-item div p strong{
     font-weight: 600;
 }
 
-.pizza-item h3{
+.tab-item h3{
     font-family: 'Barlow', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
