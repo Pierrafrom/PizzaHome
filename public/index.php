@@ -22,7 +22,12 @@ require_once __DIR__ . '/../vendor/autoload.php';
 initializeConfigurations(__DIR__ . '/../config');
 
 // Initialize routing and handle the request.
-initializeRouter(__DIR__ . '/../views');
+try {
+    initializeRouter(__DIR__ . '/../views');
+} catch (Exception $e) {
+    // Log the exception.
+    error_log($e->getMessage());
+}
 
 /**
  * Initialize application configurations.
@@ -47,6 +52,7 @@ function initializeConfigurations(string $configPath): void
  * @param string $viewsPath The path to the views directory.
  *
  * @return void
+ * @throws Exception
  */
 function initializeRouter(string $viewsPath): void
 {
@@ -57,6 +63,18 @@ function initializeRouter(string $viewsPath): void
 
     // Menu page route.
     $router->get('/menu', 'MenuController');
+
+    // Registration page route.
+    $router->get('/registration', 'RegistrationController');
+
+    // Login post route.
+    $router->post('/login', 'RegistrationController', 'login');
+
+    // signup post route.
+    $router->post('/signin', 'RegistrationController', 'signin');
+
+    // Logout route.
+    $router->get('/logout', 'RegistrationController', 'logout');
 
     // Handle the request.
     $router->run();

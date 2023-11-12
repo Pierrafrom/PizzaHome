@@ -37,7 +37,7 @@ abstract class Controller
      * @return void
      * @throws Exception If the view or layout files are not found.
      */
-    public function index(): void
+    public function loadPage(): void
     {
         try {
             $view = $this->getViewName();
@@ -61,7 +61,7 @@ abstract class Controller
             require $layoutFilePath;
         } catch (Exception $e) {
             // Handle the exception, e.g., by logging the error and displaying an error message to the user.
-            error_log($e->getMessage());
+            echo ($e->getMessage());
             echo "An error occurred while loading the page.";
         }
     }

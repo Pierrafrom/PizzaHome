@@ -37,25 +37,22 @@
 }
 
 .tab-content {
-    background: url('/img/background-menu.png'), #fff repeat-y;
+    background-color: var(--background);
     width: 100%;
-    max-width: 2000px;
-    margin: auto;
-    flex-direction: column;
-    align-items: center;
 }
 
-.tab-content h2 {
+.tab-content .container {
+    padding: 0;
+    background: url('/img/background-menu.png'), #fff repeat-y;
+}
+
+.tab-content .container h2 {
     color: var(--primary);
-    font-family: 'Lobster Two', cursive;
-    font-size: 4rem;
-    font-weight: 700;
-    letter-spacing: 1px;
 }
 
 .tab-item {
     width: 100%;
-    color: black;
+    color: var(--background);
     padding: 1em 0;
     display: flex;
     flex-direction: row;
@@ -63,11 +60,16 @@
     align-items: center;
 }
 
-.tab-item div {
+.tab-item article {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     width: 50%;
+}
+
+.tab-item article .allergens {
+    color: var(--secondary);
+    font-size: 1rem;
 }
 
 .tab-item div p strong{

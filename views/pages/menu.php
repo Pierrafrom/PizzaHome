@@ -1,13 +1,59 @@
 <?php
+
+use App\models\Pizza;
+
 $title = "Menu";
 $cssFiles = ["banner.css", "menu.css"];
-$scriptFile = "menu.js";
+$scriptFile = "tabs.js";
 ?>
 
-<div class="banner classic-banner">
-    <img src="/img/secondary-banner.webp" alt="Photo of parasols on tables at the café on an old street.">
+<section class="banner classic-banner">
+    <picture>
+        <!-- WebP Format -->
+        <source media="(max-width: 1000px)"
+                srcset="/img/banners/secondary-banner-sm-min.webp, 
+                /img/banners/secondary-banner-l-min.webp 2x, 
+                /img/banners/secondary-banner-xl-min.webp 3x"
+                type="image/webp">
+        <source media="(min-width: 1001px) and (max-width: 1500px)"
+                srcset="/img/banners/secondary-banner-m-min.webp, 
+                /img/banners/secondary-banner-xl-min.webp 2x"
+                type="image/webp">
+        <source media="(min-width: 1501px) and (max-width: 2000px)"
+                srcset="/img/banners/secondary-banner-l-min.webp, 
+                /img/banners/secondary-banner-xl-min.webp 2x"
+                type="image/webp">
+        <source media="(min-width: 2001px)"
+                srcset="/img/banners/secondary-banner-xl-min.webp"
+                type="image/webp">
+
+        <!-- PNG Format -->
+        <source media="(max-width: 1000px)"
+                srcset="/img/banners/secondary-banner-sm-min.png, 
+                /img/banners/secondary-banner-l-min.png 2x, 
+                /img/banners/secondary-banner-xl-min.png 3x"
+                type="image/png">
+        <source media="(min-width: 1001px) and (max-width: 1500px)"
+                srcset="/img/banners/secondary-banner-m-min.png, 
+                /img/banners/secondary-banner-xl-min.png 2x"
+                type="image/png">
+        <source media="(min-width: 1501px) and (max-width: 2000px)"
+                srcset="/img/banners/secondary-banner-l-min.png, 
+                /img/banners/secondary-banner-xl-min.png 2x"
+                type="image/png">
+        <source media="(min-width: 2001px)  "
+                srcset="/img/banners/secondary-banner-xl-min.png"
+                type="image/png">
+
+        <!-- Fallback -->
+        <img src="/img/banners/secondary-banner-sm-min.png"
+             alt="Photo of parasols on tables at the café on an old street."
+             decoding="async"
+             loading="lazy"
+        >
+    </picture>
     <h1>Menu</h1>
-</div>
+</section>
 
 <ul class="tabs" role="tablist">
     <li><a href="#pizza-tab" class="tab active-tab" role="tab" aria-controls="pizza-tab" aria-selected="true"
@@ -22,99 +68,29 @@ $scriptFile = "menu.js";
 </ul>
 
 <section id="pizza-tab" class="tab-content show-flex">
-    <h2>Pizza</h2>
+    <div class="container">
+        <h2>Pizza</h2>
 
-    <div class="tab-item">
-        <div>
-            <h3>Marinara</h3>
-            <p><i>Tomato sauce, garlic, oregano, olive oil (no cheese).</i></p>
-            <p><strong>€9.99</strong></p>
-        </div>
-        <button class="btn-primary">Add to Cart</button>
+        <?php
+
+        try {
+            $pizzas = Pizza::getAllPizzas();
+
+            foreach ($pizzas as $pizza) {
+                echo '<div class="tab-item">';
+                echo '<article>';
+                echo $pizza;
+                echo '</article>';
+                echo '<button class="btn-primary">Add to Cart</button>';
+                echo '</div>';
+            }
+
+        } catch (Exception $e) {
+            echo '<p>An error occurred while retrieving pizzas.</p>';
+        }
+
+        ?>
     </div>
-
-    <div class="tab-item">
-        <div>
-            <h3>Margherita</h3>
-            <p><i>Tomato sauce, mozzarella, fresh basil, olive oil.</i></p>
-            <p><strong>€10.99</strong></p>
-        </div>
-        <button class="btn-primary">Add to Cart</button>
-    </div>
-
-    <div class="tab-item">
-        <div>
-            <h3>Pepperoni</h3>
-            <p><i>Tomato sauce, mozzarella, pepperoni (spicy salami).</i></p>
-            <p><strong>€12.99</strong></p>
-        </div>
-        <button class="btn-primary">Add to Cart</button>
-    </div>
-
-    <div class="tab-item">
-        <div>
-            <h3>Quattro Formaggi (Four Cheese)</h3>
-            <p><i>Mozzarella, gorgonzola, parmesan, goat cheese.</i></p>
-            <p><strong>€13.99</strong></p>
-        </div>
-        <button class="btn-primary">Add to Cart</button>
-    </div>
-
-    <div class="tab-item">
-        <div>
-            <h3>Hawaiian</h3>
-            <p><i>Tomato sauce, mozzarella, ham, pineapple.</i></p>
-            <p><strong>€13.99</strong></p>
-        </div>
-        <button class="btn-primary">Add to Cart</button>
-    </div>
-
-    <div class="tab-item">
-        <div>
-            <h3>Diavola</h3>
-            <p><i>Tomato sauce, mozzarella, pepperoni, red peppers.</i></p>
-            <p><strong>€13.99</strong></p>
-        </div>
-        <button class="btn-primary">Add to Cart</button>
-    </div>
-
-    <div class="tab-item">
-        <div>
-            <h3>Vegetarian</h3>
-            <p><i>Tomato sauce, mozzarella, mushrooms, bell peppers, onions, black olives, tomatoes.</i></p>
-            <p><strong>€14.99</strong></p>
-        </div>
-        <button class="btn-primary">Add to Cart</button>
-    </div>
-
-    <div class="tab-item">
-        <div>
-            <h3>Calzone</h3>
-            <p><i>Tomato sauce, mozzarella, ham, mushrooms (folded in the shape of a turnover).</i></p>
-            <p><strong>€14.99</strong></p>
-        </div>
-        <button class="btn-primary">Add to Cart</button>
-    </div>
-
-    <div class="tab-item">
-        <div>
-            <h3>Prosciutto e Funghi</h3>
-            <p><i>Tomato sauce, mozzarella, Parma ham, mushrooms.</i></p>
-            <p><strong>€14.99</strong></p>
-        </div>
-        <button class="btn-primary">Add to Cart</button>
-    </div>
-
-    <div class="tab-item">
-        <div>
-            <h3>Quattro Stagioni (Four Seasons)</h3>
-            <p><i>Tomato sauce, mozzarella, ham, artichokes, black olives, mushrooms
-                    (divided into four sections with each ingredient representing a season).</i></p>
-            <p><strong>€15.99</strong></p>
-        </div>
-        <button class="btn-primary">Add to Cart</button>
-    </div>
-
 </section>
 
 <section id="drink-tab" class="tab-content hide">

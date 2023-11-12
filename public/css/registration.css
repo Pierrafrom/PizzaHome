@@ -1,0 +1,42 @@
+.registration-container{
+    width: 50vh;
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    background-color: var(--neutral);
+}
+
+.tabs {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.tabs li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+}
+
+.tab {
+    width: 100%;
+    height: 100%;
+    color: var(--text);
+    background-color: var(--neutral);
+    padding: 10px 0;
+    text-align: center;
+    border-bottom: var(--neutral) 2px solid;
+    border-top: var(--neutral) 2px solid;
+}
+
+.active-tab {
+    background-color: var(--text);
+    color: var(--primary);
+    border-bottom: var(--primary) solid 2px;
+    border-top: var(--text) solid 2px;
+}
+

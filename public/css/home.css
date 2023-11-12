@@ -33,6 +33,56 @@
     padding: 10px 20px;
 }
 
+.best-sellers {
+    background: url('/img/background-menu.png'), #fff repeat;
+}
+
+.best-sellers .container h2 {
+    display: block;
+    text-align: center;
+    margin: auto;
+    color: var(--primary);
+}
+
+.best-sellers .container .article-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    padding: 10px;
+}
+
+.best-sellers .container .article-container article {
+    background: var(--light-glass);
+    box-shadow: 0 1px 9px 0 var(--dark-glass);
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    display: flex;
+}
+
+.best-sellers .container .article-container article picture {
+    height: 100%;
+    display: flex;
+}
+
+.best-sellers .container .article-container article img {
+    border-radius: 10px;
+    max-height: 245px;
+}
+
+.best-sellers .container .article-container article .pizza-details {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    text-align: center;
+    width: calc(100% - 245px);
+    color: var(--background);
+}
+
+
 /*Responsive*/
 @media screen and (min-width: 1420px) {
     .home-banner {
@@ -46,3 +96,41 @@
         font-size: 1rem;
     }
 }
+
+@media screen and (max-width: 1000px) {
+    .best-sellers .container .article-container {
+        grid-template-columns: repeat(1, 1fr);
+        grid-template-rows: repeat(4, 1fr);
+    }
+
+    .best-sellers .container .article-container article img {
+        max-height: 168px;
+    }
+
+    .best-sellers .container .article-container article .pizza-details {
+        width: calc(100% - 168px);
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .best-sellers .container .article-container article{
+        flex-direction: column-reverse;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+
+    .best-sellers .container .article-container article .pizza-details{
+        height: 180px;
+        width: 100%;
+    }
+
+    .best-sellers .container .article-container article picture{
+        width: 100%;
+        height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-bottom: 10px;
+    }
+}
+

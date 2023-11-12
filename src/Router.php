@@ -47,7 +47,7 @@ class Router
      *
      * @return $this
      */
-    public function get(string $url, string $controller, string $method = 'index'): self
+    public function get(string $url, string $controller, string $method = 'loadPage'): self
     {
         return $this->addRoute('GET', $url, $controller, $method);
     }
@@ -61,7 +61,7 @@ class Router
      *
      * @return $this
      */
-    public function post(string $url, string $controller, string $method = 'index'): self
+    public function post(string $url, string $controller, string $method): self
     {
         return $this->addRoute('POST', $url, $controller, $method);
     }

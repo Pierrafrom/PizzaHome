@@ -1,10 +1,25 @@
+<?php
+
+session_start();
+
+$isConnected = false; // Variable pour suivre si l'utilisateur est connecté
+
+// Vérifiez si la variable de session 'logged_in' existe et est vraie
+if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+    $isConnected = true;
+    // Vous pouvez également récupérer d'autres informations de session si nécessaire
+    // Par exemple, le nom de l'utilisateur, l'id, etc.
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title><?php echo $title ?? 'Pizza Home'; ?></title>
+    <title><?php echo $title ?? 'Food Home'; ?></title>
     <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/css/style.css" type="text/css">
     <link rel="preload" href="/css/style.css" as="style">
@@ -19,15 +34,20 @@
         <?php endforeach; ?>
     <?php endif; ?>
     <script src="/js/navbar.js" defer></script>
+    <script src="/js/loader.js" defer></script>
     <?php if (isset($scriptFile)): ?>
         <script src="/js/<?php echo $scriptFile; ?>" defer></script>
     <?php endif; ?>
 </head>
 <body>
-
-<?php
-$isConnected = false;
-?>
+<!-- loader -->
+<div id="loader">
+    <svg class="loader-svg" viewBox="0 0 50 50">
+        <circle cx="25" cy="10" r="4" fill="#4FA053"/>
+        <circle cx="10" cy="40" r="4" fill="white"/>
+        <circle cx="40" cy="40" r="4" fill="#AD2831"/>
+    </svg>
+</div>
 
 <header>
     <nav>
@@ -47,7 +67,8 @@ $isConnected = false;
                         <li>
                             <hr>
                         </li>
-                        <li><a href="#" class="btn-error">Log Out</a></li>
+                        <li><a href="/logout?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>"
+                               class="btn-error">Log Out</a></li>
                     </ul>
                 </div>
             <?php else: ?>
@@ -57,8 +78,10 @@ $isConnected = false;
                     <li><a href="#">Cart</a></li>
                 </ul>
                 <div class="auth-buttons">
-                    <a href="#" class="btn-secondary">Log In</a>
-                    <a href="#" class="btn-primary">Sign Up</a>
+                    <a href="/registration?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>#login"
+                       class="btn-secondary">Log In</a>
+                    <a href="/registration?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>#signin"
+                       class="btn-primary">Sign In</a>
                 </div>
             <?php endif; ?>
         </div>
@@ -88,5 +111,10 @@ $isConnected = false;
         echo 'Page rendered in ' . round(1000 * (microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'])) . ' ms';
     } ?>
 </footer>
+
+<script>
+    document.body.classList.add('loader-active');
+</script>
+
 </body>
 </html>

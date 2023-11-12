@@ -112,4 +112,77 @@ class DB_Connection
             throw new PDOException("Query failed: " . $e->getMessage());
         }
     }
+
+    /**
+     * Calls a stored procedure with the given parameters.
+     *
+     * This method allows calling a stored procedure in a database
+     * by passing IN and OUT parameters. It automatically handles the binding of
+     * parameters and the retrieval of results.
+     *
+     * @param string $procedureName The name of the stored procedure.
+     * @param array $params An associative array of IN parameters to pass to the procedure.
+     * @param array|null &$outParams A referenced array for OUT parameters.
+     *
+     * @return array The result set returned by the stored procedure.
+     *
+     * @throws PDOException If the procedure call fails.
+     *
+     * Usage example:
+     * ```php
+     * $params = [
+     *     'inputFirstName' => 'John',
+     *     'inputLastName' => 'Doe',
+     *     'inputEmail' => 'john.doe@example.com',
+     *     'inputPhone' => '1234567890',
+     *     'inputPassword' => 'password123'
+     * ];
+     * $outParams = ['clientID' => null];
+     *
+     * try {
+     *     $result = DB_Connection::callProcedure('RegisterOrUpdateClient', $params, $outParams);
+     *     echo "Client ID: " . $outParams['clientID'];
+     * } catch (PDOException $e) {
+     *     echo "Error: " . $e->getMessage();
+     * }
+     * ```
+     */
+    public static function callProcedure(string $procedureName, array $params = [], array &$outParams = []): array
+    {
+        $pdo = self::getPDO(); // Obtains a PDO instance for database connection.
+
+        try {
+            // Creates placeholders for IN and OUT parameters.
+            $inParamPlaceholders = implode(',', array_map(fn($key) => ':' . $key, array_keys($params)));
+            $outParamPlaceholders = $outParams ? implode(',', array_map(fn($key) => "@$key", array_keys($outParams))) : '';
+            $paramPlaceholders = $inParamPlaceholders . ($outParamPlaceholders ? ', ' . $outParamPlaceholders : '');
+
+            // Prepares the call to the stored procedure with placeholders.
+            $stmt = $pdo->prepare("CALL $procedureName($paramPlaceholders)");
+
+            // Binds each IN parameter with its corresponding value.
+            foreach ($params as $key => &$value) {
+                $stmt->bindParam(':' . $key, $value, is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
+            }
+
+            // Executes the procedure call.
+            $stmt->execute();
+
+            // Retrieves values for OUT parameters after execution.
+            if ($outParams !== []) {
+                foreach ($outParams as $key => &$value) {
+                    $value = $pdo->query("SELECT @$key")->fetch(PDO::FETCH_COLUMN);
+                }
+            }
+
+            // Retrieves the result set returned by the stored procedure.
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt->closeCursor(); // Closes the cursor to clean up and prepare for the next query.
+
+            return $results;
+        } catch (PDOException $e) {
+            // Throws a new exception if a problem occurs during the procedure call.
+            throw new PDOException("The call to the procedure '$procedureName' failed: " . $e->getMessage());
+        }
+    }
 }

@@ -1,35 +1,106 @@
 <?php
 
-use App\DB_Connection;
+use App\models\Pizza;
 
 $title = "Home";
 $cssFiles = ["banner.css", "home.css"];
 ?>
 
-<div class="banner home-banner">
-    <img src="/img/homeBanner.webp" alt="An Experienced Chef Bakes Pizza with a Special Giant Spatula.">
+<section class="banner home-banner">
+    <picture>
+        <!-- WebP Format -->
+        <source media="(max-width: 1000px)"
+                srcset="/img/banners/home-banner-sm-min.webp, 
+                /img/banners/home-banner-l-min.webp 2x, 
+                /img/banners/home-banner-xl-min.webp 3x"
+                type="image/webp">
+        <source media="(min-width: 1001px) and (max-width: 1500px)"
+                srcset="/img/banners/home-banner-m-min.webp, 
+                /img/banners/home-banner-xl-min.webp 2x"
+                type="image/webp">
+        <source media="(min-width: 1501px) and (max-width: 2000px)"
+                srcset="/img/banners/home-banner-l-min.webp, 
+                /img/banners/home-banner-xl-min.webp 2x"
+                type="image/webp">
+        <source media="(min-width: 2001px)"
+                srcset="/img/banners/home-banner-xl-min.webp"
+                type="image/webp">
+
+        <!-- PNG Format -->
+        <source media="(max-width: 1000px)"
+                srcset="/img/banners/home-banner-sm-min.png, 
+                /img/banners/home-banner-l-min.png 2x, 
+                /img/banners/home-banner-xl-min.png 3x"
+                type="image/png">
+        <source media="(min-width: 1001px) and (max-width: 1500px)"
+                srcset="/img/banners/home-banner-m-min.png, 
+                /img/banners/home-banner-xl-min.png 2x"
+                type="image/png">
+        <source media="(min-width: 1501px) and (max-width: 2000px)"
+                srcset="/img/banners/home-banner-l-min.png, 
+                /img/banners/home-banner-xl-min.png 2x"
+                type="image/png">
+        <source media="(min-width: 2001px)  "
+                srcset="/img/banners/home-banner-xl-min.png"
+                type="image/png">
+
+        <!-- Fallback -->
+        <img src="/img/banners/home-banner-sm-min.png"
+             alt="An Experienced Chef Bakes Pizza with a Special Giant Spatula."
+             decoding="async"
+             loading="lazy"
+        >
+    </picture>
     <h1>Pizza Home</h1>
     <p>"Where Every Bite Takes You to Italy."</p>
-    <a href="#" class="btn-primary">Order Now!</a>
-</div>
+    <a href="/menu" class="btn-primary">Order Now!</a>
+</section>
 
-<?php
-try {
-    // Utilisation de la méthode 'query' pour récupérer tous les clients sous forme de tableau associatif
-    $clients = DB_Connection::query("SELECT * FROM CLIENT");
+<section class="best-sellers">
+    <div class="container">
+        <h2>Best Sellers</h2>
+        <div class="article-container">
 
-    echo '<table>';
-    echo '<tr><th>ID</th><th>First Name</th><th>Last Name</th></tr>';
-    foreach ($clients as $client) {
-        echo '<tr>';
-        echo '<td>' . htmlspecialchars($client['id']) . '</td>';
-        echo '<td>' . htmlspecialchars($client['first_name']) . '</td>';
-        echo '<td>' . htmlspecialchars($client['last_name']) . '</td>';
-        echo '</tr>';
-    }
-    echo '</table>';
-} catch (PDOException $e) {
-    echo "Erreur : " . $e->getMessage();
-}
+            <?php
 
-?>
+            try {
+                $spotlightPizzas = Pizza::getSpotlightPizzas();
+
+                foreach ($spotlightPizzas as $pizza) {
+                    echo '<article>';
+                    echo '<picture>';
+                    // WebP Format
+                    echo '<source srcset="/img/pizzas/' . $pizza->getImageName() . '-pizza-min.webp" type="image/webp">';
+                    // PNG Format
+                    echo '<img src="/img/pizzas/' . $pizza->getImageName() . '-pizza-min.png" type="image/png" alt="' .
+                        htmlspecialchars($pizza->name) . ' pizza." decoding="async" loading="lazy">';
+                    echo '</picture>';
+                    echo '<div class="pizza-details">';
+                    echo '<h3>' . htmlspecialchars($pizza->name) . '</h3>';
+                    echo $pizza->getDescription(); // Description is already wrapped in <p> in the method
+                    echo '<button class="btn-primary">Add to Cart</button>';
+                    echo '</div>';
+                    echo '</article>';
+
+                }
+            } catch (Exception $e) {
+                echo '<p>An error occurred while retrieving pizzas.</p>';
+            }
+
+            ?>
+
+        </div>
+    </div>
+</section>
+
+<section class="team">
+    <div class="container">
+        <h2>Our Team</h2>
+    </div>
+</section>
+
+<section class="location">
+    <div class="container">
+        <h2>Our Location</h2>
+    </div>
+</section>
