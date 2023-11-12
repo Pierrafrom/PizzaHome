@@ -57,7 +57,7 @@ class RegistrationController extends Controller
             }
 
             // Initialize the session
-            $this->createSession($outParams['userID'], $email);
+            $this->createSession((int)$outParams['userID'], $email);
 
             // Redirect to the home page or the requested redirect page if it's valid
             $this->redirect($_POST['redirect'] ?? '/');
@@ -170,7 +170,7 @@ class RegistrationController extends Controller
             }
 
             // Initialize the session
-            $this->createSession($outParams['clientID'], $email);
+            $this->createSession((int)$outParams['clientID'], $email);
 
             // Redirect to the home page or the requested redirect page if valid
             $this->redirect($_POST['redirect'] ?? '/');
@@ -182,28 +182,55 @@ class RegistrationController extends Controller
     }
 
     /**
-     * Initializes a user session.
+     * Initializes a user session with enhanced security settings.
      *
-     * This method starts a new session if one hasn't already been started. It then populates
-     * the session with user information, indicating that the user is logged in.
+     * This method starts a new session if one hasn't already been started. It sets the session cookie parameters
+     * with specific attributes to enhance security, including the 'SameSite' attribute to comply with modern browser
+     * requirements. After setting these parameters, it initiates a session and sets session variables to
+     * indicate that the user is logged in.
      *
-     * @param mixed $userId The user's ID to store in the session.
-     * @param string $email The user's email to store in the session.
+     * @param int $userId The user's ID to be stored in the session.
+     * @param string $email The user's email to be stored in the session.
      *
-     * @return void
+     * Session Cookie Parameters:
+     * - 'lifetime': The duration of the cookie in seconds. Set to 0 for a session cookie.
+     * - 'path': The path on the domain where the cookie is available.
+     * - 'domain': The domain of the cookie. If empty, it defaults to the host name of the server which sets the cookie.
+     * - 'secure': Indicates whether the cookie should be transmitted over a secure HTTPS connection. Set to true for
+     * enhanced security.
+     * - 'httponly': Flags the cookie to be accessible only through the HTTP protocol, not by client-side scripts.
+     * - 'samesite': Controls when cookies are sent with requests. Values can be 'None', 'Lax', or 'Strict'. 'None'
+     * allows sending cookies with cross-origin requests.
+     *
+     * @return void This function does not return a value.
+     *
+     * Note: Ensure your site is served over HTTPS when setting the 'SameSite' attribute to 'None'. This update is
+     * necessary to comply with modern browser standards for cookie security and privacy.
      */
     private function createSession(int $userId, string $email): void
     {
-        // Start a new session if one hasn't been started yet
+        // Check if a session hasn't already been started
         if (session_status() === PHP_SESSION_NONE) {
+            // Set session cookie parameters
+            session_set_cookie_params([
+                'lifetime' => 0, // or specify the lifetime of the cookie in seconds
+                'path' => '/',
+                'domain' => '', // specify your domain if necessary
+                'secure' => false, // set to true if your site only operates on HTTPS
+                'httponly' => true, // set to true to prevent access to the cookie via JavaScript
+                'samesite' => 'Lax' // Values can be 'None' (recommended with https), 'Lax' (recommended with http) or 'Strict'
+            ]);
+
+            // Start the session
             session_start();
         }
 
-        // Set session variables to indicate that the user is logged in
+        // Set session variables to indicate the user is logged in
         $_SESSION['logged_in'] = true;
         $_SESSION['user_id'] = $userId;
         $_SESSION['user_email'] = $email;
     }
+
 
     /**
      * Redirects to a specified URL.
