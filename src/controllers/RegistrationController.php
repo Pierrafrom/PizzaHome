@@ -147,6 +147,10 @@ class RegistrationController extends Controller
             throw new Exception("Passwords do not match.");
         }
 
+        // put last name in uppercase and first name in lowercase
+        $lastName = strtoupper($lastName);
+        $firstName = strtolower($firstName);
+
         // Assemble phone number and hash the password
         $fullPhone = $countryCode . $phone;
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
