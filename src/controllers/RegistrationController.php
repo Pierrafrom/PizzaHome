@@ -3,6 +3,7 @@
 namespace App\controllers;
 
 use App\DB_Connection;
+use App\helpers\URL;
 use Exception;
 use JetBrains\PhpStorm\NoReturn;
 use PDOException;
@@ -60,7 +61,7 @@ class RegistrationController extends Controller
             $this->createSession((int)$outParams['userID'], $email);
 
             // Redirect to the home page or the requested redirect page if it's valid
-            $this->redirect($_POST['redirect'] ?? '/');
+            URL::redirect($_POST['redirect'] ?? '/');
 
         } catch (PDOException $e) {
             // Handle database-related exceptions
@@ -68,23 +69,35 @@ class RegistrationController extends Controller
         }
     }
 
+    /**
+     * Terminates the current user session and redirects to a specified page.
+     *
+     * This static method performs several actions to ensure that the user's session is
+     * properly terminated. It can be used in any context where a user needs to be logged out.
+     *
+     * @return void
+     * @throws Exception
+     */
     #[NoReturn] public static function logout(): void
     {
-        // Démarrer la session si pas déjà démarrée
+        // Start the session if it has not already been started.
+        // This is necessary because you cannot manipulate session variables if a session hasn't started.
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
 
-        // Détruisez toutes les variables de session
+        // Destroy all session variables.
+        // This clears any data stored in the session, effectively logging out the user.
         $_SESSION = array();
 
-        // Vérifier et détruire le cookie de session si nécessaire
+        // Check and destroy the session cookie if necessary.
+        // This is important for security, ensuring that the session cannot be hijacked.
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
             setcookie(
                 session_name(),
                 '',
-                time() - 42000,
+                time() - 42000, // Set the cookie's expiration time in the past to delete it.
                 $params["path"],
                 $params["domain"],
                 $params["secure"],
@@ -92,13 +105,12 @@ class RegistrationController extends Controller
             );
         }
 
-        // Finalement, détruisez la session
+        // Finally, destroy the session itself.
         session_destroy();
 
-        // Redirection vers la page d'accueil ou la page de redirection demandée si elle est valide
+        // Redirect to the homepage or a requested redirect page if it's valid.
         $redirectUrl = filter_input(INPUT_GET, 'redirect', FILTER_SANITIZE_URL) ?: '/';
-        header('Location: ' . $redirectUrl);
-        exit;
+        URL::redirect($redirectUrl);
     }
 
     /**
@@ -177,7 +189,7 @@ class RegistrationController extends Controller
             $this->createSession((int)$outParams['clientID'], $email);
 
             // Redirect to the home page or the requested redirect page if valid
-            $this->redirect($_POST['redirect'] ?? '/');
+            URL::redirect($_POST['redirect'] ?? '/');
 
         } catch (PDOException $e) {
             // Handle database-related exceptions
@@ -233,33 +245,5 @@ class RegistrationController extends Controller
         $_SESSION['logged_in'] = true;
         $_SESSION['user_id'] = $userId;
         $_SESSION['user_email'] = $email;
-    }
-
-
-    /**
-     * Redirects to a specified URL.
-     *
-     * This method validates the provided URL and redirects the browser to it. If the URL is not valid,
-     * it defaults to redirecting to the home page ('/'). This method terminates script execution
-     * after sending the redirect header.
-     *
-     * @param string $url The URL to redirect to.
-     *
-     * @return void
-     * @throws \Exception If the header operation fails.
-     */
-    #[NoReturn]
-    private function redirect(string $url): void
-    {
-        // Validate the URL, defaulting to the home page ('/') if invalid
-        if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            $url = '/';
-        }
-
-        // Send a redirect header to the browser
-        header('Location: ' . $url);
-
-        // Terminate the script to prevent further execution
-        exit;
     }
 }
