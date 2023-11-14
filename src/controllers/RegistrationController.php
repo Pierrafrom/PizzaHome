@@ -8,6 +8,14 @@ use Exception;
 use JetBrains\PhpStorm\NoReturn;
 use PDOException;
 
+/**
+ * Manages user registration, login, and logout processes.
+ *
+ * The RegistrationController class extends the base Controller class and is responsible
+ * for handling user authentication and registration processes. It includes methods for logging in,
+ * signing in (registering), logging out, and initializing user sessions. The class utilizes a
+ * database connection for user authentication and session management.
+ */
 class RegistrationController extends Controller
 {
 

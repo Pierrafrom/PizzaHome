@@ -5,6 +5,13 @@ namespace App\helpers;
 use Exception;
 use JetBrains\PhpStorm\NoReturn;
 
+/**
+ * Provides utility methods for URL handling within an application.
+ *
+ * The URL class in the App\Helpers namespace offers functionalities related to URL processing.
+ * It currently includes a method for redirecting to a specified URL. This class can be expanded
+ * to include more URL-related utilities as needed.
+ */
 class URL
 {
     /**
