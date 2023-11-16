@@ -3,6 +3,7 @@
 namespace App\controllers;
 
 use App\DB_Connection;
+use App\helpers\DB_Helper;
 use App\helpers\URL;
 use Exception;
 use JetBrains\PhpStorm\NoReturn;
@@ -46,27 +47,15 @@ class RegistrationController extends Controller
         }
 
         try {
-            // Call the stored procedure for user login
-            $procedureName = 'UserLogin';
-            $params = ['inputEmail' => $email];
-            $outParams = [
-                'userID' => null,
-                'hashedPassword' => null
-            ];
-            DB_Connection::callProcedure($procedureName, $params, $outParams);
+            $id = DB_Helper::verifyCredentials($email, $password);
 
-            // Check if a user has been found
-            if ($outParams['userID'] == -1) {
-                throw new Exception("No user found with the given email.");
-            }
-
-            // Verify the password
-            if (!password_verify($password, $outParams['hashedPassword'])) {
-                throw new Exception("Invalid password.");
-            }
+            // update last login date
+            $procedureName = 'UpdateLastLogin';
+            $params = ['inputUserID' => $id];
+            DB_Connection::callProcedure($procedureName, $params);
 
             // Initialize the session
-            $this->createSession((int)$outParams['userID'], $email);
+            $this->createSession($id, $email);
 
             // Redirect to the home page or the requested redirect page if it's valid
             URL::redirect($_POST['redirect'] ?? '/');

@@ -76,6 +76,12 @@ function initializeRouter(string $viewsPath): void
     // Logout route.
     $router->get('/logout', 'RegistrationController', 'logout');
 
+    // Admin page route.
+    $router->get('/admin', 'AdminController');
+
+    // API route.
+    $router->post('/api/verifyPassword', 'ApiController', 'verifyPassword');
+
     // Handle the request.
     $router->run();
 }

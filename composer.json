@@ -6,7 +6,8 @@
   },
   "require": {
     "vlucas/phpdotenv": "^5.5",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "firebase/php-jwt": "^6.9"
   },
   "require-dev": {
     "filp/whoops": "^2.15"

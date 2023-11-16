@@ -54,8 +54,8 @@
 }
 
 .best-sellers .container .article-container article {
-    background: var(--light-glass);
-    box-shadow: 0 1px 9px 0 var(--dark-glass);
+    background: var(--glass);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(20px);
     border-radius: 10px;
     display: flex;

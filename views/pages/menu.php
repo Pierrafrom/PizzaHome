@@ -4,7 +4,7 @@ use App\models\Pizza;
 
 $title = "Menu";
 $cssFiles = ["banner.css", "menu.css"];
-$scriptFile = "tabs.js";
+$scriptFiles = ["tabs.js"];
 ?>
 
 <section class="banner classic-banner">
