@@ -5,7 +5,7 @@ $cssFiles = array("banner.css", "registration.css");
 $scriptFiles = ["tabs.js"];
 $moduleFiles = ["registration.js"];
 
-$eyeIcons = '<svg xmlns="http://www.w3.org/2000/svg" height="1em" class="eye-icon show-flex toggle-password" viewBox="0 0 640 512">
+$eyeIcons = '<svg xmlns="http://www.w3.org/2000/svg" height="1em" class="eye-icon show-flex toggle-password eye-closed" viewBox="0 0 640 512">
                             <path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2
                             25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1
                             79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320
@@ -17,7 +17,7 @@ $eyeIcons = '<svg xmlns="http://www.w3.org/2000/svg" height="1em" class="eye-ico
                             7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0
                             89.9-12.9 126.2-32.5L373 389.9z"/>
                         </svg>
-             <svg xmlns="http://www.w3.org/2000/svg" height="1em" class="eye-icon hide toggle-password" viewBox="0 0 576 512">
+             <svg xmlns="http://www.w3.org/2000/svg" height="1em" class="eye-icon hide toggle-password eye-open" viewBox="0 0 576 512">
                             <path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3
                             16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8
                             192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7

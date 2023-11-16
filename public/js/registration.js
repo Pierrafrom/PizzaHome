@@ -101,17 +101,28 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Add click event listeners for all password toggle icons.
+    // Toggle password visibility when the toggle icon is clicked.
     toggleIcons.forEach(function (icon) {
         icon.addEventListener('click', function () {
-            const input = this.parentElement.querySelector('input'); // Select the associated input element.
-            // Toggle the type of the input to show/hide the password.
-            input.type = input.type === 'password' ? 'text' : 'password';
-            // Toggle visibility classes for the icon.
-            this.classList.toggle('show-flex');
-            this.classList.toggle('hide');
-            this.nextElementSibling.classList.toggle('hide');
-            this.nextElementSibling.classList.toggle('show-flex');
+            const input = this.closest('.form-group').querySelector('input');
+
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+
+            const eyeOpenIcon = this.closest('.form-group').querySelector('.eye-open');
+            const eyeClosedIcon = this.closest('.form-group').querySelector('.eye-closed');
+
+            if (isPassword) {
+                eyeOpenIcon.classList.remove('hide');
+                eyeOpenIcon.classList.add('show-flex');
+                eyeClosedIcon.classList.add('hide');
+                eyeClosedIcon.classList.remove('show-flex');
+            } else {
+                eyeOpenIcon.classList.add('hide');
+                eyeOpenIcon.classList.remove('show-flex');
+                eyeClosedIcon.classList.remove('hide');
+                eyeClosedIcon.classList.add('show-flex');
+            }
         });
     });
 
@@ -211,7 +222,7 @@ function showMessage(message, type) {
  *                              `false` otherwise.
  */
 function verifyPassword(email, password, callback) {
-    const data = { email, password };
+    const data = {email, password};
 
     fetch('/api/verifyPassword', {
         method: 'POST',
