@@ -13,7 +13,7 @@ class DB_Helper
      * This method calls a stored procedure for user login and checks if the provided
      * email and password match the records in the database.
      *
-     * @param string $email    The user's email address.
+     * @param string $email The user's email address.
      * @param string $password The user's password.
      *
      * @return int Returns the user's ID if the credentials are valid.
@@ -40,4 +40,35 @@ class DB_Helper
         // Return the user's ID
         return $outParams['userID'];
     }
+
+    /**
+     * Checks if an email exists in the database.
+     *
+     * This function calls a stored procedure 'CheckEmailExists' in the database
+     * to determine if the given email address exists in the database. It uses
+     * a predefined database connection and handles input and output parameters
+     * for the procedure call.
+     *
+     * @param string $email The email address to be checked.
+     *
+     * @return bool Returns true if the email exists, false otherwise.
+     */
+    public static function checkEmailExists(string $email): bool
+    {
+        // Name of the stored procedure
+        $procedureName = 'CheckEmailExists';
+
+        // Parameters to be passed to the stored procedure
+        $params = ['inputEmail' => $email];
+
+        // Output parameters expected from the stored procedure
+        $outParams = ['emailExists' => false];
+
+        // Calling the stored procedure with input and output parameters
+        DB_Connection::callProcedure($procedureName, $params, $outParams);
+
+        // Return the result from the output parameter
+        return $outParams['emailExists'];
+    }
+
 }

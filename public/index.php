@@ -67,6 +67,9 @@ function initializeRouter(string $viewsPath): void
     // Registration page route.
     $router->get('/registration', 'RegistrationController');
 
+    // Cart page route.
+    $router->get('/cart', 'CartController');
+
     // Login post route.
     $router->post('/login', 'RegistrationController', 'login');
 
@@ -81,6 +84,10 @@ function initializeRouter(string $viewsPath): void
 
     // API route.
     $router->post('/api/verifyPassword', 'ApiController', 'verifyPassword');
+
+    $router->post('/api/checkEmailExists', 'ApiController', 'checkEmailExists');
+
+    $router->post('/api/addProductToCart', 'ApiController', 'addProductToCart');
 
     // Handle the request.
     $router->run();

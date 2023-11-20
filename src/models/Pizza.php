@@ -19,6 +19,11 @@ class Pizza extends Food
     private static int $autoIncrementId = 1;
 
     /**
+     * @var array An array of ingredients included in the pizza item.
+     */
+    private array $ingredients = [];
+
+    /**
      * Constructor for the Pizza class.
      *
      * @param int|null $id The unique identifier of the pizza. If null, an ID will be automatically generated.
@@ -194,15 +199,29 @@ class Pizza extends Food
         return strtolower(str_replace(' ', '-', $nameWithoutParentheses));
     }
 
+
     /**
-     * Magic method to return a string representation of the Pizza object.
+     * Displays pizza information formatted for a menu.
      *
-     * @return string A formatted string containing the pizza details.
+     * This function generates a string that includes the pizza's name,
+     * its ingredients (with allergens highlighted), and its price, all
+     * formatted for display in a menu context.
+     *
+     * @return string The formatted menu item display string.
+     *
+     * @example Output Example:
+     *          <h3>Pizza Name</h3>
+     *          <p><i>Ingredient1, <span style="color: var(--secondary);">Allergen *</span>, Ingredient2</i></p>
+     *          <p><strong>€12.99</strong></p>
+     *
+     * The ingredients list is sanitized to prevent XSS attacks. Allergens
+     * are specially marked with a red asterisk and styled in red. The pizza
+     * name and price are also sanitized and formatted.
      */
-    public function __toString(): string
+    public function displayInMenu(): string
     {
         // Initialize the output with the pizza name wrapped in <h3> tags.
-        $output = '<h3>' . htmlspecialchars($this->name) . '</h3>';
+        $output = '<h4>' . htmlspecialchars($this->name) . '</h4>';
 
         // Create a string for the ingredients, separated by commas.
         $ingredientsList = [];
@@ -226,6 +245,42 @@ class Pizza extends Food
 
         // Return the formatted string.
         return $output;
+    }
+
+    /**
+     * Magic getter to access protected properties of the class.
+     *
+     * @param string $property The property name to access.
+     *
+     * @return mixed The value of the property.
+     * @throws InvalidArgumentException If the property does not exist.
+     */
+    public function __get(string $property)
+    {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
+        return parent::__get($property);
+    }
+
+    /**
+     * Magic setter to set protected properties of the class.
+     *
+     * @param string $property The property name to set.
+     * @param mixed $value The value to set the property to.
+     *
+     * @throws InvalidArgumentException If the property does not exist or the value is of the incorrect type.
+     */
+    public function __set(string $property, mixed $value)
+    {
+        if ($property === 'ingredients') {
+            if (!is_array($value)) {
+                throw new InvalidArgumentException("ingredients must be an array.");
+            }
+            $this->ingredients = $value;
+        } else {
+            parent::__set($property, $value);
+        }
     }
 
 }

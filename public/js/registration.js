@@ -92,13 +92,33 @@ document.addEventListener('DOMContentLoaded', function () {
     // Add submit event listener for the sign-in form.
     signinForm.addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent the default form submission action.
-        let isValid = checkPasswords(this) && validatePasswordComplexity(this); // Validate passwords.
-        if (validateForm(this) && isValid) {
-            this.submit(); // Submit the form if all validations pass.
-        } else if (!validateForm(this)) {
-            // Show an error message if form validation fails.
+        let fieldsFilled = validateForm(this);
+        if (!fieldsFilled){
+            // Show error message if password is not complex enough.
             showMessage("Please fill out all fields.", CustomAlert.Type.ERROR);
+            return;
         }
+        let samePassword = checkPasswords(this);
+        if (!samePassword){
+            // Show error message if passwords don't match.
+            showMessage("Passwords do not match.", CustomAlert.Type.ERROR);
+            return
+        }
+        let passwordOK = validatePasswordComplexity(this);
+        if (!passwordOK){
+            showMessage("Password must be at least 8 characters long and include at least one uppercase " +
+                "letter, one number, and one special character.", CustomAlert.Type.ERROR);
+            return;
+        }
+        checkEmailExists(this.querySelector('input[name="email"]').value,
+            (isSuccessful) => {
+                if (isSuccessful) {
+                    this.submit(); // Submit the form only if the email is valid
+                } else {
+                    showMessage("Email already exists.", CustomAlert.Type.ERROR);
+                }
+            }
+        );
     });
 
     // Toggle password visibility when the toggle icon is clicked.
@@ -170,11 +190,7 @@ function validateForm(form) {
 function checkPasswords(form) {
     const password = form.querySelector('input[name="password"]').value;
     const confirmPassword = form.querySelector('input[name="confirm_password"]').value;
-    if (password !== confirmPassword) {
-        showMessage("Passwords do not match.", CustomAlert.Type.ERROR); // Show error message if passwords don't match.
-        return false;
-    }
-    return true;
+    return password === confirmPassword;
 }
 
 /**
@@ -189,12 +205,8 @@ function validatePasswordComplexity(form) {
     const password = form.querySelector('input[name="password"]').value;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-    if (!passwordRegex.test(password)) {
-        showMessage("Password must be at least 8 characters long and include at least one uppercase " +
-            "letter, one number, and one special character.", CustomAlert.Type.ERROR); // Show error message if password is not complex enough.
-        return false;
-    }
-    return true;
+    return passwordRegex.test(password);
+
 }
 
 /**
@@ -243,6 +255,49 @@ function verifyPassword(email, password, callback) {
         .catch(error => {
             console.error(error);
             callback(false);
+        });
+}
+
+/**
+ * Checks if an email exists by making a POST request to a server endpoint.
+ *
+ * This function sends the provided email to an API endpoint '/api/checkEmailExists'
+ * using a POST request. The server is expected to respond with a JSON object
+ * indicating whether the email exists or not. The callback function is then
+ * called with a boolean value based on the server's response. In case of a fetch
+ * error, the callback is called with false.
+ *
+ * @param {string} email - The email address to check for existence.
+ * @param {function} callback - A callback function that is called with the result.
+ */
+function checkEmailExists(email, callback) {
+    // Prepare the data to be sent
+    const data = {email};
+
+    // Make a POST request to the server
+    fetch('/api/checkEmailExists', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': '*/*'
+        }
+    })
+        // Parse the response to JSON
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            // Call the callback based on the server's response
+            if (data.success) {
+                callback(false); // Email does not exist
+            } else {
+                callback(true); // Email exists
+            }
+        })
+        // Handle any errors during the fetch
+        .catch(error => {
+            console.error(error);
+            callback(false); // Error occurred, assume email does not exist
         });
 }
 

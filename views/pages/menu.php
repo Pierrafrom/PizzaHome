@@ -1,10 +1,12 @@
 <?php
 
 use App\models\Pizza;
+use App\models\Soda;
+use App\models\Wine;
 
 $title = "Menu";
 $cssFiles = ["banner.css", "menu.css"];
-$scriptFiles = ["tabs.js"];
+$scriptFiles = ["tabs.js", "cart.js"];
 ?>
 
 <section class="banner classic-banner">
@@ -79,9 +81,13 @@ $scriptFiles = ["tabs.js"];
             foreach ($pizzas as $pizza) {
                 echo '<div class="tab-item">';
                 echo '<article>';
-                echo $pizza;
+                echo $pizza->displayInMenu();
                 echo '</article>';
-                echo '<button class="btn-primary">Add to Cart</button>';
+                echo '<button class="btn-primary add-to-cart" 
+                                data-product-id="' . $pizza->id . '"
+                                data-product-type="pizza">
+                                Add to Cart
+                      </button>';
                 echo '</div>';
             }
 
@@ -94,7 +100,85 @@ $scriptFiles = ["tabs.js"];
 </section>
 
 <section id="drink-tab" class="tab-content hide">
-    <h2>Drink</h2>
+    <div class="container">
+        <h2>Drink</h2>
+        <div class="icon-title-container">
+            <img src="/img/icons/soda-icon.svg" alt="Soda icon">
+        </div>
+        <?php
+        try {
+            $sodas = Soda::getAllSodas();
+
+            foreach ($sodas as $soda) {
+                echo '<div class="tab-item">';
+                echo '<article>';
+                echo $soda->displayInMenu();
+                echo '</article>';
+                echo '<button class="btn-primary add-to-cart" 
+                                data-product-id="' . $soda->id . '"
+                                data-product-type="soda">
+                                Add to Cart
+                      </button>';
+                echo '</div>';
+            }
+
+        } catch (Exception $e) {
+            echo '<p>An error occurred while retrieving sodas.</p>';
+        }
+        ?>
+
+        <div class="icon-title-container">
+            <img src="/img/icons/wine-icon.svg" alt="Soda icon">
+        </div>
+
+        <?php
+        try {
+            $wines = Wine::getAllWhiteWine();
+
+            echo '<div class="tab-item"><h3><i>White</i></h3></div>';
+
+            foreach ($wines as $wine) {
+                echo '<div class="tab-item">';
+                echo '<article>';
+                echo $wine->displayInMenu();
+                echo '</article>';
+                echo '<button class="btn-primary add-to-cart" 
+                                data-product-id="' . $wine->id . '"
+                                data-product-type="wine">
+                                Add to Cart
+                      </button>';
+                echo '</div>';
+            }
+
+        } catch (Exception $e) {
+            echo '<p>An error occurred while retrieving white wines.</p>';
+        }
+        ?>
+
+        <?php
+        try {
+            $wines = Wine::getAllRedWine();
+
+            echo '<div class="tab-item"><h3><i>Red</i></h3></div>';
+
+            foreach ($wines as $wine) {
+                echo '<div class="tab-item">';
+                echo '<article>';
+                echo $wine->displayInMenu();
+                echo '</article>';
+                echo '<button class="btn-primary add-to-cart" 
+                                data-product-id="' . $wine->id . '"
+                                data-product-type="wine">
+                                Add to Cart
+                      </button>';
+                echo '</div>';
+            }
+
+        } catch (Exception $e) {
+            echo '<p>An error occurred while retrieving red wines.</p>';
+        }
+        ?>
+    </div>
 </section>
 
 <section id="dessert-tab" class="tab-content hide">

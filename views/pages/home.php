@@ -65,6 +65,7 @@ $cssFiles = ["banner.css", "home.css"];
 
             try {
                 $spotlightPizzas = Pizza::getSpotlightPizzas();
+                // TODO: Adapt the code to display products of other types (Wine, Soda, Cocktail, Dessert).
 
                 foreach ($spotlightPizzas as $pizza) {
                     echo '<article>';

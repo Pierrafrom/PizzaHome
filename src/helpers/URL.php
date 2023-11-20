@@ -17,10 +17,6 @@ class URL
     /**
      * Redirects to a specified URL.
      *
-     * This method validates the provided URL and redirects the browser to it. If the URL is not valid,
-     * it defaults to redirecting to the home page ('/'). This method terminates script execution
-     * after sending the redirect header.
-     *
      * @param string $url The URL to redirect to.
      *
      * @return void
@@ -29,11 +25,6 @@ class URL
     #[NoReturn]
     public static function redirect(string $url): void
     {
-        // Validate the URL, defaulting to the home page ('/') if invalid
-        if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            $url = '/';
-        }
-
         // Send a redirect header to the browser
         header('Location: ' . $url);
 

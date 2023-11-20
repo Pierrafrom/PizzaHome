@@ -76,10 +76,29 @@
     font-weight: 600;
 }
 
-.tab-item h3{
+.tab-item h4{
     font-family: 'Barlow', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: 1px;
+}
+
+.tab-item h3{
+    font-family: 'Lobster Two', cursive;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.icon-title-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-title-container img{
+    width: 50px;
+    height: 50px;
 }
 

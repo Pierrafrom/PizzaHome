@@ -1,16 +1,15 @@
 <?php
 
-session_start();
+use App\helpers\SessionHelper;
 
-$isConnected = false; // Variable pour suivre si l'utilisateur est connecté
+SessionHelper::initSession();
 
-// Vérifiez si la variable de session 'logged_in' existe et est vraie
+$isConnected = false;
+
+
 if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
     $isConnected = true;
-    // Vous pouvez également récupérer d'autres informations de session si nécessaire
-    // Par exemple, le nom de l'utilisateur, l'id, etc.
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -65,7 +64,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
                     <ul class="nav-links" style="width: calc(100% - 48px);">
                         <li><a href="/"><span>Home</span></a></li>
                         <li><a href="/menu">Menu</a></li>
-                        <li><a href="#">Cart</a></li>
+                        <li><a href="/cart">Cart</a></li>
                     </ul>
                     <div class="user-info">
                         <div><img id="avatar-img" src="/img/avatar.png" alt="User-avatar"></div>
@@ -83,7 +82,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
                     <ul class="nav-links">
                         <li><a href="/"><span>Home</span></a></li>
                         <li><a href="/menu">Menu</a></li>
-                        <li><a href="#">Cart</a></li>
+                        <li><a href="/cart">Cart</a></li>
                     </ul>
                     <div class="auth-buttons">
                         <a href="/registration?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>#login"

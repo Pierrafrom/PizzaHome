@@ -31,10 +31,6 @@ abstract class Food
      */
     protected bool $spotlight;
 
-    /**
-     * @var array An array of ingredients included in the food item.
-     */
-    protected array $ingredients = [];
 
     /**
      * Magic getter to access protected properties of the class.
@@ -86,12 +82,6 @@ abstract class Food
                     throw new InvalidArgumentException("spotlight must be a boolean.");
                 }
                 $this->spotlight = $value;
-                break;
-            case 'ingredients':
-                if (!is_array($value)) {
-                    throw new InvalidArgumentException("ingredients must be an array.");
-                }
-                $this->ingredients = $value;
                 break;
             default:
                 throw new InvalidArgumentException("Invalid property: $property");

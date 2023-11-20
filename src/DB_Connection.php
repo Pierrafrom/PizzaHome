@@ -122,7 +122,7 @@ class DB_Connection
      *
      * @param string $procedureName The name of the stored procedure.
      * @param array $params An associative array of IN parameters to pass to the procedure.
-     * @param array|null &$outParams A referenced array for OUT parameters.
+     * @param array &$outParams A referenced array for OUT parameters.
      *
      * @return array The result set returned by the stored procedure.
      *
