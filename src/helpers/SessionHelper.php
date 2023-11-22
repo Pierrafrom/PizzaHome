@@ -55,17 +55,24 @@ class SessionHelper
      * indicate that the user is logged in. It stores the user's ID and email as session data.
      *
      * @param int $userId The user's ID.
-     * @param string $email The user's email address.
      * @return void This function does not return a value.
      */
-    public static function sessionConnect(int $userId, string $email): void
+    public static function sessionConnect(int $userId): void
     {
         self::createSession();
+
+        if (!isset($_SESSION['cart'])) {
+            session_regenerate_id(true);
+            $_SESSION['cart'] = array();
+        } else {
+            $cart = $_SESSION['cart'];
+            session_regenerate_id(true);
+            $_SESSION['cart'] = $cart;
+        }
 
         // Set session variables to indicate the user is logged in
         $_SESSION['logged_in'] = true;
         $_SESSION['user_id'] = $userId;
-        $_SESSION['user_email'] = $email;
     }
 
     /**
@@ -101,6 +108,8 @@ class SessionHelper
      */
     public static function destroySession(): void
     {
+        self::createSession();
+
         // Check if a session is currently active
         if (session_status() === PHP_SESSION_ACTIVE) {
             // Clear all session data

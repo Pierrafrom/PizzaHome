@@ -153,12 +153,16 @@ class ApiController
             $productId = $_POST['productId'] ?? null;
             // Retrieve the product type from POST data, default to null if not set
             $productType = $_POST['productType'] ?? null;
-
-            // Call the method to add the product to the cart and store the result
-            $result = CartController::addProductToCart($productId, $productType);
-
-            // Send the response back with the result
-            $this->sendResponse($result);
+            // Retrieve the product quantity from POST data
+            $productQuantity = $_POST['productQuantity'];
+            if ($productQuantity < 1) {
+                $this->sendResponse(['success' => false, 'message' => 'Invalid product quantity']);
+            } else {
+                // Call the method to add the product to the cart and store the result
+                $result = CartController::addProductToCart($productId, $productType, $productQuantity);
+                // Send the response back with the result
+                $this->sendResponse($result);
+            }
         }
     }
 

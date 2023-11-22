@@ -16,7 +16,7 @@ class CartController extends Controller
      * @param string $productType The type of the product (e.g., 'pizza', 'soda').
      * @return bool Returns true if the product was successfully added, false otherwise.
      */
-    public static function addProductToCart(int $productId, string $productType): bool
+    public static function addProductToCart(int $productId, string $productType, int $productQuantity): bool
     {
         SessionHelper::initSession(); // Initialize session variables
 
@@ -31,10 +31,13 @@ class CartController extends Controller
         }
 
         // Add or update the product in the cart
-        if (!isset($_SESSION['cart'][$productType][$productId])) {
-            $_SESSION['cart'][$productType][$productId] = 1; // Add the product with a quantity of 1
+        $productKey = 'product_' . $productId; // Create a unique key for each product
+        if (!isset($_SESSION['cart'][$productType][$productKey])) {
+            // Add the product to the cart if it doesn't exist
+            $_SESSION['cart'][$productType][$productKey] = ['quantity' => $productQuantity];
         } else {
-            $_SESSION['cart'][$productType][$productId]++; // Increment the quantity if the product already exists
+            // Update the product quantity if it already exists
+            $_SESSION['cart'][$productType][$productKey]['quantity'] += $productQuantity;
         }
 
         return true; // Return true indicating the product was added successfully

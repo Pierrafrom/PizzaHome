@@ -20,7 +20,6 @@ use PDOException;
  */
 class RegistrationController extends Controller
 {
-
     /**
      * Handles the user login process.
      *
@@ -56,7 +55,7 @@ class RegistrationController extends Controller
             DB_Connection::callProcedure($procedureName, $params);
 
             // Connect the user to a session
-            SessionHelper::sessionConnect($id, $email);
+            SessionHelper::sessionConnect($id);
 
             // Redirect to the home page or the requested redirect page if it's valid
             URL::redirect($_POST['redirect'] ?? '/');
@@ -141,7 +140,7 @@ class RegistrationController extends Controller
 
         // Call the stored procedure for registration
         try {
-            if (DB_Helper::checkEmailExists($email)){
+            if (DB_Helper::checkEmailExists($email)) {
                 throw new Exception("Email already exists");
             }
 
@@ -162,7 +161,7 @@ class RegistrationController extends Controller
             }
 
             // Connect the user to a session
-            SessionHelper::sessionConnect((int)$outParams['clientID'], $email);
+            SessionHelper::sessionConnect((int)$outParams['clientID']);
 
             // Redirect to the home page or the requested redirect page if valid
             URL::redirect($_POST['redirect'] ?? '/');

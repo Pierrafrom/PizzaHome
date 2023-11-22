@@ -6,7 +6,8 @@ use App\models\Wine;
 
 $title = "Menu";
 $cssFiles = ["banner.css", "menu.css"];
-$scriptFiles = ["tabs.js", "cart.js"];
+$scriptFiles = ["tabs.js", "quantity-controls.js"];
+$moduleFiles = ["add-to-cart.js"];
 ?>
 
 <section class="banner classic-banner">
@@ -83,11 +84,18 @@ $scriptFiles = ["tabs.js", "cart.js"];
                 echo '<article>';
                 echo $pizza->displayInMenu();
                 echo '</article>';
+                echo '<div class="menu-btns">';
+                echo '<div class="quantity-control">';
+                echo '<button class="btn-quantity btn-minus">-</button>';
+                echo '<span class="product-quantity" data-product-id="' . $pizza->id . '">0</span>';
+                echo '<button class="btn-quantity btn-plus">+</button>';
+                echo '</div>';
                 echo '<button class="btn-primary add-to-cart" 
                                 data-product-id="' . $pizza->id . '"
                                 data-product-type="pizza">
                                 Add to Cart
                       </button>';
+                echo '</div>';
                 echo '</div>';
             }
 
@@ -114,11 +122,13 @@ $scriptFiles = ["tabs.js", "cart.js"];
                 echo '<article>';
                 echo $soda->displayInMenu();
                 echo '</article>';
+                echo '<div class="menu-btns">';
                 echo '<button class="btn-primary add-to-cart" 
                                 data-product-id="' . $soda->id . '"
                                 data-product-type="soda">
                                 Add to Cart
                       </button>';
+                echo '</div>';
                 echo '</div>';
             }
 
@@ -142,11 +152,13 @@ $scriptFiles = ["tabs.js", "cart.js"];
                 echo '<article>';
                 echo $wine->displayInMenu();
                 echo '</article>';
+                echo '<div class="menu-btns">';
                 echo '<button class="btn-primary add-to-cart" 
                                 data-product-id="' . $wine->id . '"
                                 data-product-type="wine">
                                 Add to Cart
                       </button>';
+                echo '</div>';
                 echo '</div>';
             }
 
@@ -166,11 +178,13 @@ $scriptFiles = ["tabs.js", "cart.js"];
                 echo '<article>';
                 echo $wine->displayInMenu();
                 echo '</article>';
+                echo '<div class="menu-btns">';
                 echo '<button class="btn-primary add-to-cart" 
                                 data-product-id="' . $wine->id . '"
                                 data-product-type="wine">
                                 Add to Cart
                       </button>';
+                echo '</div>';
                 echo '</div>';
             }
 
