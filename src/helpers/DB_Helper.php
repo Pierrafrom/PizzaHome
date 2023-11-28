@@ -33,6 +33,8 @@ class DB_Helper
         }
 
         // Verify the password
+        // The password_verify function checks if the given password matches the hashed password
+        // The salt is automatically retrieved from the hashed password.
         if (!password_verify($password, $outParams['hashedPassword'])) {
             throw new Exception("Invalid password.");
         }

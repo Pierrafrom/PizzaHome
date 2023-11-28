@@ -1,50 +1,8 @@
-<?php
-
-use App\helpers\SessionHelper;
-
-SessionHelper::initSession();
-
-$isConnected = false;
-
-
-if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
-    $isConnected = true;
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title><?php echo $title ?? 'Pizza Home'; ?></title>
-    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
-    <link rel="preload" href="/css/style.css" as="style">
-    <link rel="stylesheet" href="/css/hamburger.css" type="text/css">
-    <link rel="preload" href="/css/hamburger.css" as="style">
-    <link rel="stylesheet" href="/css/font.css" type="text/css">
-    <link rel="preload" href="/css/font.css" as="style">
-    <?php if (isset($cssFiles)): ?>
-        <?php foreach ($cssFiles as $cssFile): ?>
-            <link rel="stylesheet" href="/css/<?php echo $cssFile; ?>" type="text/css">
-            <link rel="preload" href="/css/<?php echo $cssFile; ?>" as="style">
-        <?php endforeach; ?>
-    <?php endif; ?>
-    <script src="/js/navbar.js" defer></script>
-    <script src="/js/loader.js" defer></script>
-    <?php if (isset($scriptFiles)): ?>
-        <?php foreach ($scriptFiles as $scriptFile): ?>
-            <script src="/js/<?php echo $scriptFile; ?>" defer></script>
-        <?php endforeach; ?>
-    <?php endif; ?>
-    <?php if (isset($moduleFiles)): ?>
-        <?php foreach ($moduleFiles as $moduleFile): ?>
-            <script type="module" src="/js/<?php echo $moduleFile; ?>" defer></script>
-        <?php endforeach; ?>
-    <?php endif; ?>
-</head>
+<?php
+echo $this->viewData['head'];
+?>
 <body>
 <div class="page-container">
     <!-- loader -->
@@ -58,39 +16,11 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
 
     <header>
         <nav>
-            <div><a href="/"><img src="/img/logo.svg" alt="Logo"></a></div>
+            <div><a href="/"><img src="/img/logo.svg" decoding="async" loading="lazy" alt="Logo"></a></div>
             <div id="nav-content" class="nav-content hide">
-                <?php if ($isConnected): ?>
-                    <ul class="nav-links" style="width: calc(100% - 48px);">
-                        <li><a href="/"><span>Home</span></a></li>
-                        <li><a href="/menu">Menu</a></li>
-                        <li><a href="/cart">Cart</a></li>
-                    </ul>
-                    <div class="user-info">
-                        <div><img id="avatar-img" src="/img/avatar.png" alt="User-avatar"></div>
-                        <ul id="user-dropdown" class="hide">
-                            <li><a href="#">Order History</a></li>
-                            <li><a href="#">Profile</a></li>
-                            <li>
-                                <hr>
-                            </li>
-                            <li><a href="/logout?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>"
-                                   class="btn-error">Log Out</a></li>
-                        </ul>
-                    </div>
-                <?php else: ?>
-                    <ul class="nav-links">
-                        <li><a href="/"><span>Home</span></a></li>
-                        <li><a href="/menu">Menu</a></li>
-                        <li><a href="/cart">Cart</a></li>
-                    </ul>
-                    <div class="auth-buttons">
-                        <a href="/registration?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>#login"
-                           class="btn-secondary">Log In</a>
-                        <a href="/registration?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>#signin"
-                           class="btn-primary">Sign In</a>
-                    </div>
-                <?php endif; ?>
+                <?php
+                echo $this->viewData['menu'];
+                ?>
             </div>
             <div id="hamburger-icon" class="menu-toggle hide">
                 <!-- Thanks to JulanDeAlb for the hamburger button code

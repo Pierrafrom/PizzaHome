@@ -21,6 +21,32 @@ use PDOException;
 class RegistrationController extends Controller
 {
     /**
+     * RegistrationController constructor.
+     *
+     * Initializes the RegistrationController instance. This constructor sets up
+     * the basic configurations required for rendering the registration and login pages.
+     * It establishes the page title as "Registration" and specifies the CSS and JavaScript
+     * files necessary for the styling and functionality of these pages.
+     *
+     * The constructor first calls the parent constructor of the Controller class for general
+     * initialization tasks, such as setting the view path. Then, it customizes the setup for
+     * the registration and login pages by specifying relevant CSS files (like 'banner.css' and
+     * 'registration.css') for page styling, and JavaScript files ('tabs.js' for tab functionality
+     * and 'registration.js' for handling registration and login processes) to enhance the
+     * user experience and interactivity on these pages.
+     *
+     * @param string $viewPath The base path for the view files specific to the RegistrationController.
+     */
+    public function __construct(string $viewPath)
+    {
+        parent::__construct($viewPath); // Call the parent constructor for basic setup
+        self::$title = "Registration"; // Set the title specific to the registration and login pages
+        self::$cssFiles = ["banner.css", "registration.css"]; // Define CSS files for page styling
+        self::$scriptFiles = ["tabs.js"]; // Include JavaScript files for tab functionality
+        self::$moduleFiles = ["registration.js"]; // Include JavaScript modules for registration and login processes
+    }
+
+    /**
      * Handles the user login process.
      *
      * This method is responsible for processing the login request. It checks the request
@@ -75,7 +101,7 @@ class RegistrationController extends Controller
      * @return void
      * @throws Exception
      */
-    #[NoReturn] public static function logout(): void
+    #[NoReturn] public function logout(): void
     {
         SessionHelper::destroySession();
 
@@ -136,6 +162,12 @@ class RegistrationController extends Controller
 
         // Assemble phone number and hash the password
         $fullPhone = $countryCode . $phone;
+
+        // Hash the password using the password_hash function. This function uses the bcrypt algorithm.
+        // The PASSWORD_DEFAULT constant is used to ensure that the algorithm used is always the
+        // most secure algorithm available on the server.
+        // See https://www.php.net/manual/en/function.password-hash.php for more information.
+        // The salt is generated automatically by the function.
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         // Call the stored procedure for registration

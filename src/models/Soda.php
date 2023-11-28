@@ -76,7 +76,7 @@ class Soda extends Food
      */
     public function displayInMenu(): string
     {
-        // Initialize the output with the pizza name wrapped in <h3> tags.
+        // Initialize the output with the soda name wrapped in <h3> tags.
         $output = '<h4>' . htmlspecialchars($this->name) . '</h4>';
 
         // Append the price information, formatted with the euro sign and strong tags for emphasis.
@@ -85,4 +85,59 @@ class Soda extends Food
         // Return the formatted string.
         return $output;
     }
+
+    /**
+     * Constructs a lowercase, URL-friendly version of the soda's name.
+     *
+     * This method takes the soda's name, replaces all spaces with hyphens,
+     * and converts the entire string to lowercase. This is useful for creating
+     * clean, readable URLs or file names that require lowercase characters
+     * and no spaces.
+     *
+     * @return string The soda's name in lowercase with spaces replaced by hyphens.
+     */
+    public function getImageName(): string
+    {
+        // First, remove all content within parentheses, including the parentheses themselves
+        $nameWithoutParentheses = preg_replace('/\s*\([^)]*\)/', '', $this->name);
+        // Then replace spaces with hyphens and convert to lowercase
+        return strtolower(str_replace(' ', '-', $nameWithoutParentheses));
+    }
+
+    /**
+     * Retrieves a Soda instance from the database by its ID.
+     *
+     * @param int $id The ID of the soda to retrieve.
+     *
+     * @return object|array The Soda instance retrieved from the database.
+     *
+     */
+    public static function getById(int $id): object|array
+    {
+        $sql = 'SELECT id, name, price, spotlight FROM VIEW_SODA WHERE id = :id';
+        $results = DB_Connection::query($sql, ['id' => $id], self::class);
+
+        if (count($results) === 1) {
+            return $results[0];
+        } else {
+            return $results;
+        }
+    }
+
+    /**
+     * Retrieves all Soda instances from the database that are featured items.
+     * @return array An array of Soda instances fetched from the database.
+     */
+    public static function getSpotlightSodas(): array
+    {
+        $sql = "SELECT id, name, price, spotlight FROM VIEW_SODA WHERE spotlight = 1";
+        $sodas = DB_Connection::query($sql, [], self::class);
+
+        if (is_object($sodas)) {
+            return [$sodas];
+        }
+
+        return $sodas;
+    }
+
 }

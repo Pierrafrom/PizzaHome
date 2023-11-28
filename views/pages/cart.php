@@ -1,20 +1,3 @@
-<?php
-
-use App\helpers\SessionHelper;
-
-SessionHelper::initSession();
-
-$cart = array();
-
-if (isset($_SESSION['cart'])) {
-    $cart = $_SESSION['cart'];
-}
-
-
-$title = "Cart";
-$cssFiles = ["banner.css"];
-?>
-
 <section class="banner classic-banner">
     <picture>
         <!-- WebP Format -->
@@ -64,9 +47,14 @@ $cssFiles = ["banner.css"];
 </section>
 
 <section>
-    <p>
+    <div class="container">
         <?php
-        var_dump($cart);
+        $cart = $this->viewData['cart'];
+        if (isset($cart)) {
+            echo $cart;
+        } else {
+            echo '<p>The cart is empty</p>';
+        }
         ?>
-    </p>
+    </div>
 </section>
