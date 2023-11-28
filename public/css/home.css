@@ -33,6 +33,21 @@
     padding: 10px 20px;
 }
 
+.arrow-link{
+    bottom: 15px;
+    height: 40px;
+    width: 40px;
+}
+
+.arrow-down {
+    fill: white;
+    transition: transform 0.3s ease;
+}
+
+.arrow-down:hover {
+    transform: scale(1.1); /* Agrandit l'icône de 10% au survol */
+}
+
 .best-sellers {
     background: url('/img/background-menu.png'), #fff repeat;
 }
@@ -71,7 +86,7 @@
     max-height: 245px;
 }
 
-.best-sellers .container .article-container article .pizza-details {
+.best-sellers .container .article-container article .product-details {
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -107,24 +122,24 @@
         max-height: 168px;
     }
 
-    .best-sellers .container .article-container article .pizza-details {
+    .best-sellers .container .article-container article .product-details {
         width: calc(100% - 168px);
     }
 }
 
 @media screen and (max-width: 500px) {
-    .best-sellers .container .article-container article{
+    .best-sellers .container .article-container article {
         flex-direction: column-reverse;
         align-items: center;
         justify-content: space-evenly;
     }
 
-    .best-sellers .container .article-container article .pizza-details{
+    .best-sellers .container .article-container article .product-details {
         height: 180px;
         width: 100%;
     }
 
-    .best-sellers .container .article-container article picture{
+    .best-sellers .container .article-container article picture {
         width: 100%;
         height: auto;
         display: flex;

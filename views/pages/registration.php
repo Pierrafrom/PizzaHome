@@ -1,10 +1,5 @@
 <?php
-
-$title = "Registration";
-$cssFiles = array("banner.css", "registration.css");
-$scriptFiles = ["tabs.js"];
-$moduleFiles = ["registration.js"];
-
+// we define svg icons here because we use them many times
 $eyeIcons = '<svg xmlns="http://www.w3.org/2000/svg" height="1em" class="eye-icon show-flex toggle-password eye-closed" viewBox="0 0 640 512">
                             <path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2
                             25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1

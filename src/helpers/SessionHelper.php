@@ -59,7 +59,7 @@ class SessionHelper
      */
     public static function sessionConnect(int $userId): void
     {
-        self::createSession();
+        self::initSession();
 
         if (!isset($_SESSION['cart'])) {
             session_regenerate_id(true);
@@ -108,7 +108,7 @@ class SessionHelper
      */
     public static function destroySession(): void
     {
-        self::createSession();
+        self::initSession();
 
         // Check if a session is currently active
         if (session_status() === PHP_SESSION_ACTIVE) {
@@ -134,4 +134,20 @@ class SessionHelper
         }
     }
 
+    /**
+     * Retrieves a specific session variable by its key.
+     *
+     * This method initializes the session if it is not already started
+     * and then fetches the specified session variable. If the variable
+     * does not exist, null is returned.
+     *
+     * @param string $key The key of the session variable to retrieve.
+     * @return mixed|null The value of the session variable if it exists, or null otherwise.
+     */
+    public static function getSessionVariable(string $key): mixed
+    {
+        self::initSession();
+
+        return $_SESSION[$key] ?? null;
+    }
 }

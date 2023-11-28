@@ -199,7 +199,6 @@ class Pizza extends Food
         return strtolower(str_replace(' ', '-', $nameWithoutParentheses));
     }
 
-
     /**
      * Displays pizza information formatted for a menu.
      *
@@ -281,6 +280,14 @@ class Pizza extends Food
         } else {
             parent::__set($property, $value);
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function getById(int $id): Pizza
+    {
+        return new self($id);
     }
 
 }

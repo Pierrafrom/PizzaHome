@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Exception;
+
 /**
  * Class Router
  *
@@ -88,7 +90,7 @@ class Router
      *
      * @return $this
      *
-     * @throws \Exception When a route or method is not found.
+     * @throws Exception When a route or method is not found.
      */
     public function run(): self
     {
@@ -97,27 +99,27 @@ class Router
 
         try {
             if (!isset($this->routes[$requestedMethod][$requestedPath])) {
-                throw new \Exception("404 Not Found", 404);
+                throw new Exception("404 Not Found", 404);
             }
 
             $route = $this->routes[$requestedMethod][$requestedPath];
             $fullControllerName = $this->controllerNamespace . $route['controller'];
 
             if (!class_exists($fullControllerName)) {
-                throw new \Exception("500 Internal Server Error - Controller Not Found", 500);
+                throw new Exception("500 Internal Server Error - Controller Not Found", 500);
             }
 
             $controller = new $fullControllerName($this->viewPath);
             $method = $route['method'];
 
             if (!method_exists($controller, $method)) {
-                throw new \Exception("500 Internal Server Error - Method Not Found", 500);
+                throw new Exception("500 Internal Server Error - Method Not Found", 500);
             }
 
             $controller->$method();
             return $this;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             http_response_code($e->getCode());
             echo $e->getMessage();
             return $this;
