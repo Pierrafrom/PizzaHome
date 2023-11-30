@@ -38,9 +38,9 @@ class SessionHelper
                 'lifetime' => 0, // set to 0 for a session cookie
                 'path' => '/',
                 'domain' => '', // specify your domain if necessary
-                'secure' => false, // set to true if your site only operates on HTTPS
+                'secure' => true, // set to true if your site only operates on HTTPS
                 'httponly' => true, // set to true to prevent access to the cookie via JavaScript
-                'samesite' => 'Lax' // Values can be 'None' (recommended with https), 'Lax' (recommended with http) or 'Strict'
+                'samesite' => 'None' // Values can be 'None' (recommended with https), 'Lax' (recommended with http) or 'Strict'
             ]);
 
             // Start the session

@@ -52,6 +52,8 @@ class CartController extends Controller
         parent::__construct($viewPath); // Call the parent constructor to set the view path
         self::$title = 'Cart'; // Set the title for the cart page
         self::$cssFiles = ["banner.css"]; // Specify CSS files for the cart view
+        self::$scriptFiles = ["quantity-controls.js"]; // Specify JS files for the cart view
+        self::$moduleFiles = ["cart.js"]; // Specify JS files for the cart view
     }
 
     /**
@@ -106,12 +108,18 @@ class CartController extends Controller
             foreach ($cart as $productType => $products) {
                 foreach ($products as $productId => $product) {
                     $productObject = $product['product'];
-                    $productQuantity = $product['quantity'];
+                    $productQuantity = intval($product['quantity']);
                     $productPrice = $productObject->price;
                     $productSubtotal = $productPrice * $productQuantity;
                     $output .= '<tr>';
                     $output .= '<td>' . $productObject->name . '</td>';
-                    $output .= '<td>' . $productQuantity . '</td>';
+                    $output .= '<td>';
+                    $output .= '<input type="number" class="product-quantity" min="0"
+                                data-product-id="' . $productId . '"
+                                data-product-type="' . $productType . '"
+                                value="' . $productQuantity . '">';
+                    $output .= '<button class="btn-primary confirm-quantity hide">Confirm</button>';
+                    $output .= '</td>';
                     $output .= '<td>' . $productPrice . '</td>';
                     $output .= '<td>' . $productSubtotal . '</td>';
                     $output .= '<td><button data-product-id="' . $productObject->id . '"
@@ -120,7 +128,7 @@ class CartController extends Controller
                     $output .= '</tr>';
                 }
             }
-            $output .= '</tbody></table';
+            $output .= '</tbody></table>';
         } catch (Exception $e) {
             $output = '<p>An error occurred while retrieving the cart</p>';
             if ($_ENV['ENVIRONMENT'] == 'development') {
@@ -255,4 +263,72 @@ class CartController extends Controller
         return true; // Indicate that the product was added successfully
     }
 
+    /**
+     * Removes a product from the shopping cart.
+     *
+     * This method removes a specific product, identified by its ID and type, from the shopping cart stored in the session.
+     * It searches for the product in the cart and removes it entirely, regardless of the quantity.
+     *
+     * @param int $productId The ID of the product to remove.
+     * @param string $productType The type of the product (e.g., 'pizza', 'soda').
+     * @return bool True if the product was successfully removed, false otherwise.
+     * @throws Exception If there is an issue initializing or modifying the session or if the product is not found in the cart.
+     */
+    public static function removeProductFromCart(int $productId, string $productType): bool
+    {
+        SessionHelper::initSession(); // Initialize session variables
+
+        // Check if the cart or the specific product type exists in the session
+        if (!isset($_SESSION['cart']) || !isset($_SESSION['cart'][$productType])) {
+            throw new Exception('The cart or product type does not exist in the session.');
+        }
+
+        // Find and remove the product from the cart
+        $cart = &$_SESSION['cart'][$productType]; // Use a reference to modify the original array
+        foreach ($cart as $key => $product) {
+            if ($product['id'] === $productId) {
+                unset($cart[$key]); // Remove the product from the cart
+                return true; // Product found and removed, return true
+            }
+        }
+
+        // If the product was not found in the cart, throw an exception
+        throw new Exception('The product was not found in the cart.');
+    }
+
+    /**
+     * Updates the quantity of a product in the shopping cart.
+     *
+     * This function allows you to update the quantity of a specific product in the shopping cart.
+     *
+     * @param int $productId The ID of the product to update.
+     * @param string $productType The type of the product (e.g., 'pizza', 'soda').
+     * @param int $newQuantity The new quantity to set for the product.
+     *
+     * @return bool True if the cart was successfully updated, false otherwise.
+     * @throws Exception If there is an issue initializing or modifying the session,
+     *                   or if the product is not found in the cart.
+     */
+    public static function updateProductQuantityInCart(int $productId, string $productType, int $newQuantity): bool
+    {
+        SessionHelper::initSession(); // Initialize session variables
+
+        // Check if the cart or the specific product type exists in the session
+        if (!isset($_SESSION['cart']) || !isset($_SESSION['cart'][$productType])) {
+            throw new Exception('The cart or product type does not exist in the session.');
+        }
+
+        // Find and update the product quantity in the cart
+        $cart = &$_SESSION['cart'][$productType]; // Use a reference to modify the original array
+        foreach ($cart as &$product) {
+            if ($product['id'] === $productId) {
+                // Update the quantity of the existing product
+                $product['quantity'] = $newQuantity;
+                return true; // Product quantity updated successfully, return true
+            }
+        }
+
+        // If the product was not found in the cart, throw an exception
+        throw new Exception('The product was not found in the cart.');
+    }
 }
