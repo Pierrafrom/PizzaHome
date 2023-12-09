@@ -31,7 +31,6 @@ abstract class Food
      */
     protected bool $spotlight;
 
-
     /**
      * Magic getter to access protected properties of the class.
      *

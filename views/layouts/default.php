@@ -39,11 +39,6 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
             <script src="/js/<?php echo $scriptFile; ?>" defer></script>
         <?php endforeach; ?>
     <?php endif; ?>
-    <?php if (isset($scriptLinkFiles)): ?>
-        <?php foreach ($scriptLinkFiles as $scriptLinkFile): ?>
-            <script src="<?php echo $scriptLinkFile; ?>" defer></script>
-        <?php endforeach; ?>
-    <?php endif; ?>
     <?php if (isset($moduleFiles)): ?>
         <?php foreach ($moduleFiles as $moduleFile): ?>
             <script type="module" src="/js/<?php echo $moduleFile; ?>" defer></script>

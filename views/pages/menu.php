@@ -1,15 +1,3 @@
-<?php
-
-use App\models\Pizza;
-use App\models\Soda;
-use App\models\Wine;
-
-$title = "Menu";
-$cssFiles = ["banner.css", "menu.css"];
-$scriptFiles = ["tabs.js", "quantity-controls.js"];
-$moduleFiles = ["add-to-cart.js"];
-?>
-
 <section class="banner classic-banner">
     <picture>
         <!-- WebP Format -->
@@ -75,34 +63,9 @@ $moduleFiles = ["add-to-cart.js"];
         <h2>Pizza</h2>
 
         <?php
-
-        try {
-            $pizzas = Pizza::getAllPizzas();
-
-            foreach ($pizzas as $pizza) {
-                echo '<div class="tab-item">';
-                echo '<article>';
-                echo $pizza->displayInMenu();
-                echo '</article>';
-                echo '<div class="menu-btns">';
-                echo '<div class="quantity-control">';
-                echo '<button class="btn-quantity btn-minus">-</button>';
-                echo '<span class="product-quantity" data-product-id="' . $pizza->id . '">0</span>';
-                echo '<button class="btn-quantity btn-plus">+</button>';
-                echo '</div>';
-                echo '<button class="btn-primary add-to-cart" 
-                                data-product-id="' . $pizza->id . '"
-                                data-product-type="pizza">
-                                Add to Cart
-                      </button>';
-                echo '</div>';
-                echo '</div>';
-            }
-
-        } catch (Exception $e) {
-            echo '<p>An error occurred while retrieving pizzas.</p>';
+        if (isset($this->viewData['pizzaSection'])) {
+            echo $this->viewData['pizzaSection'];
         }
-
         ?>
     </div>
 </section>
@@ -114,87 +77,50 @@ $moduleFiles = ["add-to-cart.js"];
             <img src="/img/icons/soda-icon.svg" alt="Soda icon">
         </div>
         <?php
-        try {
-            $sodas = Soda::getAllSodas();
-
-            foreach ($sodas as $soda) {
-                echo '<div class="tab-item">';
-                echo '<article>';
-                echo $soda->displayInMenu();
-                echo '</article>';
-                echo '<div class="menu-btns">';
-                echo '<button class="btn-primary add-to-cart" 
-                                data-product-id="' . $soda->id . '"
-                                data-product-type="soda">
-                                Add to Cart
-                      </button>';
-                echo '</div>';
-                echo '</div>';
-            }
-
-        } catch (Exception $e) {
-            echo '<p>An error occurred while retrieving sodas.</p>';
+        if (isset($this->viewData['sodaSection'])) {
+            echo $this->viewData['sodaSection'];
         }
         ?>
 
         <div class="icon-title-container">
-            <img src="/img/icons/wine-icon.svg" alt="Soda icon">
+            <img src="/img/icons/wine-icon.svg" alt="Wine icon">
+        </div>
+
+        <div class="tab-item"><h3><i>White</i></h3></div>
+        <?php
+        if (isset($this->viewData['whiteWineSection'])) {
+            echo $this->viewData['whiteWineSection'];
+        }
+        ?>
+
+        <div class="tab-item"><h3><i>Red</i></h3></div>
+
+        <?php
+        if (isset($this->viewData['redWineSection'])) {
+            echo $this->viewData['redWineSection'];
+        }
+        ?>
+
+        <div class="icon-title-container">
+            <img src="/img/icons/cocktail-icon.svg" alt="Cocktail icon">
         </div>
 
         <?php
-        try {
-            $wines = Wine::getAllWhiteWine();
-
-            echo '<div class="tab-item"><h3><i>White</i></h3></div>';
-
-            foreach ($wines as $wine) {
-                echo '<div class="tab-item">';
-                echo '<article>';
-                echo $wine->displayInMenu();
-                echo '</article>';
-                echo '<div class="menu-btns">';
-                echo '<button class="btn-primary add-to-cart" 
-                                data-product-id="' . $wine->id . '"
-                                data-product-type="wine">
-                                Add to Cart
-                      </button>';
-                echo '</div>';
-                echo '</div>';
-            }
-
-        } catch (Exception $e) {
-            echo '<p>An error occurred while retrieving white wines.</p>';
+        if (isset($this->viewData['cocktailSection'])) {
+            echo $this->viewData['cocktailSection'];
         }
         ?>
 
-        <?php
-        try {
-            $wines = Wine::getAllRedWine();
-
-            echo '<div class="tab-item"><h3><i>Red</i></h3></div>';
-
-            foreach ($wines as $wine) {
-                echo '<div class="tab-item">';
-                echo '<article>';
-                echo $wine->displayInMenu();
-                echo '</article>';
-                echo '<div class="menu-btns">';
-                echo '<button class="btn-primary add-to-cart" 
-                                data-product-id="' . $wine->id . '"
-                                data-product-type="wine">
-                                Add to Cart
-                      </button>';
-                echo '</div>';
-                echo '</div>';
-            }
-
-        } catch (Exception $e) {
-            echo '<p>An error occurred while retrieving red wines.</p>';
-        }
-        ?>
     </div>
 </section>
 
 <section id="dessert-tab" class="tab-content hide">
-    <h2>Dessert</h2>
+    <div class="container">
+        <h2>Dessert</h2>
+        <?php
+        if (isset($this->viewData['dessertSection'])) {
+            echo $this->viewData['dessertSection'];
+        }
+        ?>
+    </div>
 </section>

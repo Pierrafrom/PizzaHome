@@ -12,21 +12,27 @@ document.addEventListener('DOMContentLoaded', function () {
             let productType = button.getAttribute('data-product-type');
             let productId = button.getAttribute('data-product-id');
 
-            // get the product quantity
-            let productQuantityElement = document.querySelector('.product-quantity[data-product-id="'
-                + productId + '"]');
-            let productQuantity = parseInt(productQuantityElement.textContent);
+            // Get the product quantity
+            let productQuantityElement = null;
+            let productQuantity = 1;
+            try {
+                productQuantityElement = button.closest('.tab-item')
+                    .querySelector('.product-quantity[data-product-id="' + productId + '"]');
+                productQuantity = parseInt(productQuantityElement.textContent);
+            } catch (e) {}
 
-            // check if the product quantity is valid
+            // Check if the product quantity is valid
             if (isNaN(productQuantity) || productQuantity < 1) {
                 showMessage('Invalid product quantity.', CustomAlert.Type.ERROR);
                 return;
             }
 
+            console.log(productType + ' ' + productId + ' ' + productQuantity);
             addToCart(productType, productId, productQuantity);
         });
     });
 });
+
 
 function addToCart(productType, productId, productQuantity) {
     let postData = 'productId=' + encodeURIComponent(productId)
@@ -45,9 +51,6 @@ function addToCart(productType, productId, productQuantity) {
                 throw new Error('Server returned ' + response.status + ' : ' + response.statusText);
             }
             return response.json();
-        })
-        .then(data => {
-            console.log(data);
         })
         .catch(error => {
             console.error('Error:', error);

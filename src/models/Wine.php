@@ -100,7 +100,6 @@ class Wine extends Food
      * - alcoholPercentage (float|null): The alcohol percentage of the wine. Defaults to 12.0 if not specified.
      * - year (int|null): The vintage year of the wine. Defaults to 2020 if not specified.
      * - color (string|null): The color of the wine, which should be one of the predefined WineColor constants ('RED', 'WHITE', 'ROSE'). Throws InvalidArgumentException if an invalid color is provided.
-
      * Example Usage:
      * ```
      * $wine = new Wine(name: "Cabernet Sauvignon", price: 18.0, glassPrice: 5.0, domain: "Bordeaux", grapeVariety: "Cabernet Sauvignon", origin: "France", alcoholPercentage: 14.0, year: 2015, color: "RED");
@@ -425,7 +424,100 @@ class Wine extends Food
 
         return "<h4>$this->name</h4>" .
             "<i>$specs</i><br>" .
-            "<p><strong>Price: $this->price €</strong></p>";
+            "<p><strong>$this->price €</strong></p>";
+    }
+
+    /**
+     * Constructs a lowercase, URL-friendly version of the wine's name.
+     *
+     * This method takes the wine's name, replaces all spaces with hyphens,
+     * and converts the entire string to lowercase. This is useful for creating
+     * clean, readable URLs or file names that require lowercase characters
+     * and no spaces.
+     *
+     * @return string The wine's name in lowercase with spaces replaced by hyphens.
+     */
+    public function getImageName(): string
+    {
+        // First, remove all content within parentheses, including the parentheses themselves
+        $nameWithoutParentheses = preg_replace('/\s*\([^)]*\)/', '', $this->name);
+        // Then replace spaces with hyphens and convert to lowercase
+        return strtolower(str_replace(' ', '-', $nameWithoutParentheses));
+    }
+
+    /**
+     * Retrieves a description of the wine.
+     *
+     * This method returns a string that describes the wine, including its color, origin, grape variety,
+     * domain, alcohol percentage, and year. It is useful for providing a detailed description of the wine
+     * in a context where a more verbose description is needed.
+     *
+     * @return string A description of the wine.
+     */
+    public function getDescription(): string
+    {
+        return '<p>This wine is a ' . strtolower($this->color) . ' wine from ' . $this->origin . '</p>';
+    }
+
+    /**
+     * Retrieves a Wine instance from the database by its ID.
+     *
+     * @throws InvalidArgumentException If the provided ID does not match any wine in the database.
+     * @param int $id
+     * @return object|array
+     */
+    public static function getById(int $id): object|array
+    {
+        $sql = "SELECT id,
+                       name, 
+                       price,
+                       spotlight,
+                       glassPrice, 
+                       domain, 
+                       grapeVariety,
+                       origin, 
+                       alcoholPercentage, 
+                       year,
+                       color 
+                    FROM VIEW_WINE
+                    WHERE id = :id";
+
+        $results = DB_Connection::query($sql, ['id' => $id], self::class);
+
+        if (count($results) === 1) {
+            return $results[0];
+        } else {
+            return $results;
+        }
+    }
+
+    /**
+     * Retrieves all spotlight wine entries from the database.
+     * @return array An array of Wine objects or a single Wine object if only one record is found.
+     */
+    public static function getSpotlightWines(): array
+    {
+        $sql = "SELECT id,
+                       name, 
+                       price,
+                       spotlight,
+                       glassPrice, 
+                       domain, 
+                       grapeVariety,
+                       origin, 
+                       alcoholPercentage, 
+                       year,
+                       color 
+                    FROM VIEW_WINE
+                    WHERE spotlight = 1";
+
+        $wines = DB_Connection::query($sql, [], self::class);
+
+        if (is_object($wines)) {
+            return [$wines];
+        }
+
+        return $wines;
     }
 
 }

@@ -58,37 +58,22 @@ function initializeRouter(string $viewsPath): void
 {
     $router = new App\Router($viewsPath);
 
-    // Home page route.
-    $router->get('/', 'HomeController');
+    $router->get('/', 'HomeController') // Home page route.
+    ->get('/menu', 'MenuController') // Menu page route.
+    ->get('/registration', 'RegistrationController') // Registration page route.
+    ->get('/cart', 'CartController') // Cart page route.
+    ->post('/login', 'RegistrationController', 'login') // Login post route.
+    ->post('/signin', 'RegistrationController', 'signin') // signup post route.
+    ->get('/logout', 'RegistrationController', 'logout') // Logout route.
+    ->get('/admin', 'AdminController') // Admin page route.
 
-    // Menu page route.
-    $router->get('/menu', 'MenuController');
-
-    // Registration page route.
-    $router->get('/registration', 'RegistrationController');
-
-    // Cart page route.
-    $router->get('/cart', 'CartController');
-
-    // Login post route.
-    $router->post('/login', 'RegistrationController', 'login');
-
-    // signup post route.
-    $router->post('/signin', 'RegistrationController', 'signin');
-
-    // Logout route.
-    $router->get('/logout', 'RegistrationController', 'logout');
-
-    // Admin page route.
-    $router->get('/admin', 'AdminController');
-
-    // API route.
-    $router->post('/api/verifyPassword', 'ApiController', 'verifyPassword');
-
-    $router->post('/api/checkEmailExists', 'ApiController', 'checkEmailExists');
-
-    $router->post('/api/addProductToCart', 'ApiController', 'addProductToCart');
+    // API routes.
+    ->post('/api/verifyPassword', 'ApiController', 'verifyPassword')
+    ->post('/api/checkEmailExists', 'ApiController', 'checkEmailExists')
+    ->post('/api/addProductToCart', 'ApiController', 'addProductToCart')
+    ->post('/api/removeProductFromCart', 'ApiController', 'removeProductFromCart')
+    ->post('/api/updateProductQuantity', 'ApiController', 'updateProductQuantity')
 
     // Handle the request.
-    $router->run();
+    ->run();
 }

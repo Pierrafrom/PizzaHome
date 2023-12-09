@@ -30,6 +30,7 @@ class Dessert extends Food
      * @param string|null $name The name of the dessert. If null, a default value will be used.
      * @param float|null $price The price of the dessert. If null, a default value will be used.
      * @param bool|null $spotlight Indicates if the dessert is featured. If null, a default value will be used.
+     * @param array|null $ingredients The ingredients of the dessert. If null, an empty array will be used.
      *
      * @throws Exception Throws an exception if the dessert cannot be loaded from the database.
      *
@@ -38,9 +39,9 @@ class Dessert extends Food
      * $existingDessert = new Dessert(1);
      *
      * // To manually create a new dessert without loading from the database:
-     * $newDessert = new Dessert(null, "Chocolate Cake", 5.99, true);
+     * $newDessert = new Dessert(null, "Margarita", 7.99, true, [['name' => 'Tomato', 'isAllergen' => false]]);
      */
-    public function __construct(?int $id = null, ?string $name = null, ?float $price = null, ?bool $spotlight = null)
+    public function __construct(?int $id = null, ?string $name = null, ?float $price = null, ?bool $spotlight = null, ?array $ingredients = null)
     {
         // If the ID is provided, load the dessert details from the database.
         if (!is_null($id)) {
@@ -51,8 +52,10 @@ class Dessert extends Food
             $this->id = self::$autoIncrementId++;
             // Use the null coalescence operator to provide default values.
             $this->name = $name ?? 'My Dessert';
-            $this->price = $price ?? 5.0; // Adjust the default price as needed.
+            $this->price = $price ?? 10.0;
             $this->spotlight = $spotlight ?? false;
+            // Initialize the ingredients with an empty array if null is passed.
+            $this->ingredients = $ingredients ?? [];
         }
     }
 
@@ -90,8 +93,6 @@ class Dessert extends Food
         }
     }
 
-
-
     /**
      * Loads the ingredients of a dessert from the database.
      */
@@ -110,8 +111,6 @@ class Dessert extends Food
         }
     }
 
-
-
     /**
      * Retrieves all desserts from the database and returns them as Dessert objects.
      *
@@ -124,14 +123,14 @@ class Dessert extends Food
         $sql = "SELECT DISTINCT id FROM VIEW_DESSERT_INGREDIENTS";
         $dessertIds = DB_Connection::query($sql);
 
-        $dessert = [];
+        $desserts = [];
         // For each ID found, create a new Dessert instance.
         foreach ($dessertIds as $row) {
             // Create a new Dessert instance and load it from the database.
-            $dessert[] = new self($row['id']);
+            $desserts[] = new self($row['id']);
         }
 
-        return $dessert;
+        return $desserts;
     }
 
     /**
@@ -140,40 +139,83 @@ class Dessert extends Food
      * @return array An array of Dessert objects that are in the spotlight.
      * @throws Exception Throws an exception if the database query fails.
      */
-    public static function getSpotlightDessert(): array
+    public static function getSpotlightDesserts(): array
     {
-        // Define the SQL query to select dessert where the spotlight is true.
+        // Define the SQL query to select desserts where the spotlight is true.
         $sql = "SELECT id FROM VIEW_DESSERT_INGREDIENTS WHERE spotlight = 1 GROUP BY id";
 
         // Execute the query and store the results.
         $results = DB_Connection::query($sql);
 
-        // Initialize an array to hold the spotlight dessert.
-        $spotlightDessert = [];
+        // Initialize an array to hold the spotlight desserts.
+        $spotlightDesserts = [];
 
         // Loop through the results and create a new Dessert object for each one.
         foreach ($results as $row) {
             // Each dessert is loaded from the database by its ID.
-            $spotlightDessert[] = new self((int)$row['id']);
+            $spotlightDesserts[] = new self((int)$row['id']);
         }
 
         // Return the array of spotlight Dessert objects.
-        return $spotlightDessert;
+        return $spotlightDesserts;
+    }
+
+    /**
+     * Generates a string containing a comma-separated list of ingredient names
+     * for the dessert, enclosed within a paragraph HTML element.
+     *
+     * The method maps over the `$ingredients` array property, extracting the
+     * 'name' of each ingredient. It then concatenates these names into a
+     * single string separated by commas. The resultant string is sanitized
+     * using `htmlspecialchars()` to prevent XSS attacks when displayed in HTML.
+     *
+     * @return string Returns a string of ingredient names wrapped in a paragraph tag.
+     *                The special characters in the ingredient names are converted to HTML entities.
+     */
+    public function getDescription(): string
+    {
+        $ingredientNames = array_map(function ($ingredient) {
+            return $ingredient['name'];
+        }, $this->ingredients);
+
+        return '<p>' . htmlspecialchars(implode(', ', $ingredientNames)) . '</p>';
+    }
+
+    /**
+     * Constructs a lowercase, URL-friendly version of the dessert's name.
+     *
+     * This method takes the dessert's name, replaces all spaces with hyphens,
+     * and converts the entire string to lowercase. This is useful for creating
+     * clean, readable URLs or file names that require lowercase characters
+     * and no spaces.
+     *
+     * @return string The dessert's name in lowercase with spaces replaced by hyphens.
+     */
+    public function getImageName(): string
+    {
+        // First, remove all content within parentheses, including the parentheses themselves
+        $nameWithoutParentheses = preg_replace('/\s*\([^)]*\)/', '', $this->name);
+        // Then replace spaces with hyphens and convert to lowercase
+        return strtolower(str_replace(' ', '-', $nameWithoutParentheses));
     }
 
     /**
      * Displays dessert information formatted for a menu.
      *
      * This function generates a string that includes the dessert's name,
-     * and its price, all formatted for display in a menu context.
+     * its ingredients (with allergens highlighted), and its price, all
+     * formatted for display in a menu context.
      *
      * @return string The formatted menu item display string.
      *
      * @example Output Example:
-     *          <h4>Dessert Name</h4>
-     *          <p><strong>€5.99</strong></p>
+     *          <h3>Dessert Name</h3>
+     *          <p><i>Ingredient1, <span style="color: var(--secondary);">Allergen *</span>, Ingredient2</i></p>
+     *          <p><strong>€12.99</strong></p>
      *
-     * The dessert name and price are sanitized and formatted.
+     * The ingredients list is sanitized to prevent XSS attacks. Allergens
+     * are specially marked with a red asterisk and styled in red. The dessert
+     * name and price are also sanitized and formatted.
      */
     public function displayInMenu(): string
     {
@@ -204,6 +246,53 @@ class Dessert extends Food
         return $output;
     }
 
-    // Additional methods specific to the Dessert class can be added as needed.
+    /**
+     * Magic getter to access protected properties of the class.
+     *
+     * @param string $property The property name to access.
+     *
+     * @return mixed The value of the property.
+     * @throws InvalidArgumentException If the property does not exist.
+     */
+    public function __get(string $property)
+    {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
+        return parent::__get($property);
+    }
+
+    /**
+     * Magic setter to set protected properties of the class.
+     *
+     * @param string $property The property name to set.
+     * @param mixed $value The value to set the property to.
+     *
+     * @throws InvalidArgumentException If the property does not exist or the value is of the incorrect type.
+     */
+    public function __set(string $property, mixed $value)
+    {
+        if ($property === 'ingredients') {
+            if (!is_array($value)) {
+                throw new InvalidArgumentException("ingredients must be an array.");
+            }
+            $this->ingredients = $value;
+        } else {
+            parent::__set($property, $value);
+        }
+    }
+
+    /**
+     * Retrieves a dessert from the database using its unique identifier.
+     *
+     * @param int $id The unique identifier of the dessert.
+     *
+     * @return Dessert The dessert object.
+     * @throws Exception If the dessert is not found in the database.
+     */
+    public static function getById(int $id): Dessert
+    {
+        return new self($id);
+    }
 
 }
