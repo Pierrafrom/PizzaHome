@@ -1,11 +1,3 @@
-<?php
-$title = "Admin";
-$cssFiles = ["banner.css"];
-$scriptFiles = ["chart.js"];
-$scriptLinkFiles = ["https://cdn.jsdelivr.net/npm/apexcharts"];
-?>
-
-
 <section class="banner classic-banner">
     <picture>
         <!-- WebP Format -->
@@ -56,5 +48,11 @@ $scriptLinkFiles = ["https://cdn.jsdelivr.net/npm/apexcharts"];
 
 <section>
     <div id="chart-1"></div>
+    <div class="cheese-chart-container">
+        <div class="item" id="cheese-chart1"></div>
+        <div class="item" id="cheese-chart2"></div>
+        <div class="item" id="cheese-chart3"></div>
+        <div class="item" id="cheese-chart4"></div>
+    </div>
 </section>
 
