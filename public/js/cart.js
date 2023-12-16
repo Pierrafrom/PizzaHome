@@ -13,11 +13,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const quantityInputs = document.querySelectorAll(".product-quantity");
     quantityInputs.forEach((quantityInput) => {
         const initialQuantity = quantityInput.value; // Get the initial quantity
-        const confirmButton = quantityInput.nextElementSibling; // Select the 'Confirm' button
+        const confirmButton = quantityInput.nextElementSibling.nextElementSibling; // Select the 'Confirm' button
+
+        console.log(quantityInput);
 
         // Add an event listener for input changes
         quantityInput.addEventListener("input", () => {
             const newQuantity = quantityInput.value; // Get the new quantity
+
+            console.log(newQuantity);
 
             // Check if the quantity has changed from its initial state
             if (newQuantity !== initialQuantity) {
@@ -50,6 +54,31 @@ document.addEventListener("DOMContentLoaded", function () {
             // Now you have productId, productType, and newQuantity for the product
             // Call the updateProductQuantity function with this information
             updateProductQuantity(productId, productType, newQuantity);
+        });
+    });
+
+    const decrementButtons = document.querySelectorAll('.decrement-button');
+    const incrementButtons = document.querySelectorAll('.increment-button');
+
+    decrementButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const input = this.nextElementSibling;
+            let value = parseInt(input.value, 10);
+            value = isNaN(value) ? 0 : value;
+            value--;
+            input.value = value < input.min ? input.min : value;
+            input.dispatchEvent(new Event('input'));
+        });
+    });
+
+    incrementButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const input = this.previousElementSibling;
+            let value = parseInt(input.value, 10);
+            value = isNaN(value) ? 0 : value;
+            value++;
+            input.value = value;
+            input.dispatchEvent(new Event('input'));
         });
     });
 });

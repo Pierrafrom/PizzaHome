@@ -1,3 +1,6 @@
+@charset "UTF-8";
+/* CSS Document */
+
 @font-face {
     font-family: 'Lobster Two';
     src: local('Lobster Two Bold'), local('LobsterTwo-Bold'), url('/font/LobsterTwo-Bold.woff2') format('woff2');

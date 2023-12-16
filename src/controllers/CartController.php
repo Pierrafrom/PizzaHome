@@ -51,8 +51,7 @@ class CartController extends Controller
     {
         parent::__construct($viewPath); // Call the parent constructor to set the view path
         self::$title = 'Cart'; // Set the title for the cart page
-        self::$cssFiles = ["banner.css"]; // Specify CSS files for the cart view
-        self::$scriptFiles = ["quantity-controls.js"]; // Specify JS files for the cart view
+        self::$cssFiles = ["banner.css", "cart.css"]; // Specify CSS files for the cart view
         self::$moduleFiles = ["cart.js"]; // Specify JS files for the cart view
     }
 
@@ -69,6 +68,7 @@ class CartController extends Controller
     {
         $this->viewData = [
             'cart' => $this->generateCartView(),
+            'totalPrice' => $this->getTotalPrice()
         ];
         parent::loadPage();
     }
@@ -114,14 +114,16 @@ class CartController extends Controller
                     $output .= '<tr>';
                     $output .= '<td>' . $productObject->name . '</td>';
                     $output .= '<td>';
+                    $output .= '<button type="button" class="btn-error decrement-button">-</button>';
                     $output .= '<input type="number" class="product-quantity" min="0"
                                 data-product-id="' . $productId . '"
                                 data-product-type="' . $productType . '"
                                 value="' . $productQuantity . '">';
+                    $output .= '<button type="button" class="btn-primary increment-button">+</button>';
                     $output .= '<button class="btn-primary confirm-quantity hide">Confirm</button>';
                     $output .= '</td>';
-                    $output .= '<td>' . $productPrice . '</td>';
-                    $output .= '<td>' . $productSubtotal . '</td>';
+                    $output .= '<td>' . $productPrice . '€</td>';
+                    $output .= '<td>' . $productSubtotal . '€</td>';
                     $output .= '<td><button data-product-id="' . $productObject->id . '"
                                     data-product-type="' . $productType . '"
                                     class="btn-error cart-remove">Remove</button></td>';
@@ -207,6 +209,46 @@ class CartController extends Controller
             }
         }
         return $cartWithObjects;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getTotalPrice(): float
+    {
+        $cart = SessionHelper::getSessionVariable('cart');
+        if (is_null($cart)) {
+            return 0;
+        }
+        $totalPrice = 0;
+        try {
+            foreach ($cart as $productType => $products) {
+                foreach ($products as $product) {
+                    switch ($productType) {
+                        case 'pizza':
+                            $totalPrice += Pizza::getById($product['id'])->price * $product['quantity'];
+                            break;
+                        case 'soda':
+                            $totalPrice += Soda::getById($product['id'])->price * $product['quantity'];
+                            break;
+                        case 'dessert':
+                            $totalPrice += Dessert::getById($product['id'])->price * $product['quantity'];
+                            break;
+                        case 'wine':
+                            $totalPrice += Wine::getById($product['id'])->price * $product['quantity'];
+                            break;
+                        case 'cocktail':
+                            $totalPrice += Cocktail::getById($product['id'])->price * $product['quantity'];
+                            break;
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            if ($_ENV['ENVIRONMENT'] == 'development') {
+                throw new Exception($e->getMessage());
+            } else throw new Exception('An error occurred while retrieving the cart.');
+        }
+        return $totalPrice;
     }
 
     /**

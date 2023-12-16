@@ -48,6 +48,7 @@
 
 <section>
     <div class="container">
+        <h2>Order Summary</h2>
         <?php
         $cart = $this->viewData['cart'];
         if (isset($cart)) {
@@ -56,5 +57,22 @@
             echo '<p>The cart is empty</p>';
         }
         ?>
+        <a href="/menu" class="small-link continue-shopping">Continue shopping &#8594;</a>
+
+        <h2>Total</h2>
+        <div>
+            <table class="total-table">
+                <tr>
+                    <th>Delivery</th>
+                    <td>Free</td>
+                </tr>
+                <tr>
+                    <th>Total</th>
+                    <td><?php echo $this->viewData['totalPrice']; ?>€</td>
+                </tr>
+            </table>
+            <a href="/checkout" class="btn btn-primary checkout">Checkout</a>
+        </div>
+
     </div>
 </section>

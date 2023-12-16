@@ -66,6 +66,7 @@ function initializeRouter(string $viewsPath): void
     ->post('/signin', 'RegistrationController', 'signin') // signup post route.
     ->get('/logout', 'RegistrationController', 'logout') // Logout route.
     ->get('/admin', 'AdminController') // Admin page route.
+    ->get('/checkout', 'CheckoutController') // Checkout page route.
 
     // API routes.
     ->post('/api/verifyPassword', 'ApiController', 'verifyPassword')
