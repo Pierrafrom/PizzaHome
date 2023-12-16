@@ -144,6 +144,7 @@ class ApiController
      * It then calls a method to add the specified product to the cart and sends a response with the result.
      *
      * @return void
+     * @throws Exception When the product ID or type is not set.
      */
     public function addProductToCart(): void
     {
@@ -166,4 +167,80 @@ class ApiController
         }
     }
 
+    /**
+     * Removes a product from the shopping cart.
+     *
+     * This function first checks if the current request is a POST request by calling `isPostRequest()`.
+     * If it is, it retrieves the product ID and product type from the JSON request body.
+     * It then calls a method to remove the specified product from the cart and sends a response with the result.
+     *
+     * @return void
+     */
+    public function removeProductFromCart(): void
+    {
+        // Check if the current request is a POST request
+        if ($this->isPostRequest()) {
+            // Read the JSON data from the request body
+            $jsonRequestBody = file_get_contents('php://input');
+            $requestData = json_decode($jsonRequestBody, true);
+
+            // Check if both product ID and type are provided in the JSON data
+            $productId = $requestData['productId'] ?? null;
+            $productType = $requestData['productType'] ?? null;
+
+            if ($productId !== null && $productType !== null) {
+                try {
+                    // Call the method to remove the product from the cart
+                    $result = CartController::removeProductFromCart($productId, $productType);
+                    // Send the response back with the result
+                    $this->sendResponse(['success' => $result]);
+                } catch (Exception $e) {
+                    // Handle any exceptions by sending an error response
+                    $this->sendResponse(['success' => false, 'message' => $e->getMessage()]);
+                }
+            } else {
+                // Send an error response if product ID or type is missing
+                $this->sendResponse(['success' => false, 'message' => 'Product ID and type are required.']);
+            }
+        }
+    }
+
+    /**
+     * Updates the quantity of a product in the shopping cart.
+     *
+     * This function verifies the request, retrieves the product ID, product type, and new quantity from the POST data,
+     * and then calls the `updateProductQuantityInCart` method to update the cart. It sends a JSON response with the result.
+     *
+     * @return void Outputs a JSON response.
+     */
+    public function updateProductQuantity(): void
+    {
+        // Check if the current request is a POST request
+        if ($this->isPostRequest()) {
+            // Read the JSON data from the request body
+            $jsonRequestBody = file_get_contents('php://input');
+            $requestData = json_decode($jsonRequestBody, true);
+
+            // Retrieve the product ID from POST data, default to null if not set
+            $productId = $requestData['productId'] ?? null;
+            $productType = $requestData['productType'] ?? null;
+            $newQuantity = $requestData['newQuantity'] ?? 0;
+
+            // Check if the product ID and type are provided and the new quantity is valid
+            if ($productId !== null && $productType !== null && $newQuantity > 0) {
+                try {
+                    // Call the method to update the product quantity in the cart
+                    $result = CartController::updateProductQuantityInCart($productId, $productType, $newQuantity);
+                    // Send the response back with the result
+                    $this->sendResponse(['success' => $result]);
+                } catch (Exception $e) {
+                    // Handle any exceptions by sending an error response
+                    $this->sendResponse(['success' => false, 'message' => $e->getMessage()]);
+                }
+            } else {
+                // Send an error response if product ID, type, or new quantity is missing or invalid
+                $this->sendResponse(['success' => false, 'message' => 'Invalid product information or quantity.']);
+            }
+        }
+    }
 }

@@ -108,6 +108,14 @@ a {
     transition: 0.3s;
 }
 
+.small-link {
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-transform: none;
+    text-decoration: underline;
+    font-style : italic;
+}
+
 .container {
     width: 100%;
     max-width: 2000px;
