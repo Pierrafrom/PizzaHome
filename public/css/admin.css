@@ -1,0 +1,19 @@
+@charset "UTF-8";
+/* CSS Document */
+
+/* Admin */
+.cheese-chart-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap; /* Permet aux éléments de passer à la ligne */
+    justify-content: space-around; /* Centre les éléments horizontalement avec un espacement équitable */
+    align-items: center; /* Centre les éléments verticalement */
+}
+
+.item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    margin: 5px; /* Espacement entre les éléments */
+}
