@@ -10,7 +10,7 @@
     padding-top: 60px;
 }
 
-.registration-container{
+.form-container{
     width: 100%;
     max-width: 700px;
     height: auto;
@@ -110,7 +110,10 @@ form{
     flex-direction: row-reverse;
     width: 90%;
     justify-content: space-between;
+}
 
+.submit-group a{
+    text-transform: none;
 }
 
 label{

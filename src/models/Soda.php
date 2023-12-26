@@ -16,6 +16,10 @@ class Soda extends Food
      */
     private static int $autoIncrementId = 1;
 
+    public int $stock;
+
+    public string $bottleType;
+
     /**
      * Constructs a new Soda instance.
      *
@@ -24,13 +28,20 @@ class Soda extends Food
      * @param float|null $price The price of the soda. Defaults to 4.0 if not provided.
      * @param bool|null $spotlight Indicates if the soda is a featured item. Defaults to false if not provided.
      */
-    public function __construct(?int $id = null, ?string $name = null, ?float $price = null, ?bool $spotlight = null)
+    public function __construct(?int $id = null,
+                                ?string $name = null,
+                                ?float $price = null,
+                                ?bool $spotlight = null,
+                                ?int $stock = null,
+                                ?string $bottleType = null)
     {
         if (!is_null($id)) {
             $this->id = self::$autoIncrementId++;
             $this->name = $name ?? 'My Soda';
             $this->price = $price ?? 4.0;
             $this->spotlight = $spotlight ?? false;
+            $this->stock = $stock ?? 0;
+            $this->bottleType = 'CAN';
         }
     }
 
@@ -51,7 +62,7 @@ class Soda extends Food
      */
     public static function getAllSodas(): array
     {
-        $sql = "SELECT id, name, price, spotlight FROM VIEW_SODA";
+        $sql = "SELECT id, name, price, spotlight, stock, bottleType FROM VIEW_SODA";
         $sodas = DB_Connection::query($sql, [], self::class);
 
         if (is_object($sodas)) {
@@ -114,7 +125,7 @@ class Soda extends Food
      */
     public static function getById(int $id): object|array
     {
-        $sql = 'SELECT id, name, price, spotlight FROM VIEW_SODA WHERE id = :id';
+        $sql = 'SELECT id, name, price, spotlight, stock, bottleType FROM VIEW_SODA WHERE id = :id';
         $results = DB_Connection::query($sql, ['id' => $id], self::class);
 
         if (count($results) === 1) {
@@ -130,7 +141,7 @@ class Soda extends Food
      */
     public static function getSpotlightSodas(): array
     {
-        $sql = "SELECT id, name, price, spotlight FROM VIEW_SODA WHERE spotlight = 1";
+        $sql = "SELECT id, name, price, spotlight, stock, bottleType FROM VIEW_SODA WHERE spotlight = 1";
         $sodas = DB_Connection::query($sql, [], self::class);
 
         if (is_object($sodas)) {

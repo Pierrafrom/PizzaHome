@@ -51,7 +51,7 @@ class CartController extends Controller
     {
         parent::__construct($viewPath); // Call the parent constructor to set the view path
         self::$title = 'Cart'; // Set the title for the cart page
-        self::$cssFiles = ["banner.css", "cart.css"]; // Specify CSS files for the cart view
+        self::$cssFiles = ["banner.css", "cart.css", "table.css"]; // Specify CSS files for the cart view
         self::$moduleFiles = ["cart.js"]; // Specify JS files for the cart view
     }
 
@@ -85,15 +85,15 @@ class CartController extends Controller
      * exceptions during the process, an error message is displayed. For development environments, the
      * error message includes detailed exception information.
      *
-     * @return string The HTML content representing the cart view.
+     * @return string|null The HTML content representing the cart view.
      * @throws Exception If an error occurs during the generation of the cart view.
      * @see generateCartWithObjects For details on how cart data is structured.
      */
-    private function generateCartView(): string
+    private function generateCartView(): ?string
     {
         $cart = $this->generateCartWithObjects();
         if (empty($cart)) {
-            return '<p>Your cart is empty.</p>';
+            return null;
         }
         $output = '';
         try {
@@ -113,7 +113,7 @@ class CartController extends Controller
                     $productSubtotal = $productPrice * $productQuantity;
                     $output .= '<tr>';
                     $output .= '<td>' . $productObject->name . '</td>';
-                    $output .= '<td>';
+                    $output .= '<td style="min-width: 150px;">';
                     $output .= '<button type="button" class="btn-error decrement-button">-</button>';
                     $output .= '<input type="number" class="product-quantity" min="0"
                                 data-product-id="' . $productId . '"

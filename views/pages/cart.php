@@ -54,24 +54,30 @@
         if (isset($cart)) {
             echo $cart;
         } else {
-            echo '<p>The cart is empty</p>';
+            echo '<p style="text-align: center">The cart is empty</p>';
         }
         ?>
         <a href="/menu" class="small-link continue-shopping">Continue shopping &#8594;</a>
 
         <h2>Total</h2>
         <div>
-            <table class="total-table">
-                <tr>
-                    <th>Delivery</th>
-                    <td>Free</td>
-                </tr>
-                <tr>
-                    <th>Total</th>
-                    <td><?php echo $this->viewData['totalPrice']; ?>€</td>
-                </tr>
-            </table>
-            <a href="/checkout" class="btn btn-primary checkout">Checkout</a>
+            <?php if (isset($cart)) {
+                echo " <table class=\"total-table\">
+                        <tr>
+                            <th>Delivery</th>
+                            <td>Free</td>
+                        </tr>
+                        <tr>
+                            <th>Total</th>
+                            <td>" . $this->viewData['totalPrice'] . "€</td>
+                        </tr>
+                    </table>
+                    <a href=\"/checkout\" class=\"btn btn-primary checkout\">Checkout</a>";
+            } else{
+                echo '<p style="text-align: center">Add product to cart to order</p>';
+            } ?>
+
+
         </div>
 
     </div>

@@ -67,6 +67,7 @@ function initializeRouter(string $viewsPath): void
     ->get('/logout', 'RegistrationController', 'logout') // Logout route.
     ->get('/admin', 'AdminController') // Admin page route.
     ->get('/checkout', 'CheckoutController') // Checkout page route.
+    ->post('/checkoutSubmit', 'CheckoutController', 'checkout') // Checkout post route.
 
     // API routes.
     ->post('/api/verifyPassword', 'ApiController', 'verifyPassword')
@@ -74,6 +75,7 @@ function initializeRouter(string $viewsPath): void
     ->post('/api/addProductToCart', 'ApiController', 'addProductToCart')
     ->post('/api/removeProductFromCart', 'ApiController', 'removeProductFromCart')
     ->post('/api/updateProductQuantity', 'ApiController', 'updateProductQuantity')
+    ->post('/api/updatestockQuantity', 'ApiController', 'updatestockQuantity')
 
     // Handle the request.
     ->run();

@@ -81,6 +81,36 @@ export class CustomAlert {
     }
 
     /**
+     * Displays a confirmation dialog with a specified message and title.
+     *
+     * @param {string} message - The message to display in the confirmation dialog.
+     * @param {string} [title="Confirmation"] - Optional title for the confirmation dialog.
+     * @param {Function} [onConfirm] - Callback function to execute when the user confirms.
+     */
+    confirm(message, title = "Confirmation", onConfirm) {
+        // Set the alert title and message.
+        this.alertTitle.innerText = title;
+        this.alertMessage.innerText = message;
+
+        // set to warning style
+        this.closeButton.classList.add('btn-warning');
+
+        // Update the confirm button text.
+        this.closeButton.innerText = 'Confirm';
+
+        // Show the confirmation dialog.
+        this.alertBox.style.display = 'flex';
+
+        // Define the click behavior for the confirm button.
+        this.closeButton.onclick = () => {
+            if (typeof onConfirm === 'function') {
+                onConfirm();
+            }
+            this.hide();
+        };
+    }
+
+    /**
      * Hides the alert box.
      */
     hide() {

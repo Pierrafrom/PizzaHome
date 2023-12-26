@@ -59,6 +59,17 @@ abstract class Controller
     protected static ?array $moduleFiles = null;
 
     /**
+     * A list of JavaScript files to be included in the web page.
+     *
+     * This static property holds an array of JavaScript filenames.
+     * These scripts are intended to be common across various parts of the application.
+     * Utilizing a static property allows for easy maintenance and updates application-wide.
+     *
+     * @var array|null
+     */
+    protected static ?array $scriptLinkFiles = null;
+
+    /**
      * @var string The base path for the view files.
      */
     protected string $viewPath;
@@ -262,6 +273,13 @@ abstract class Controller
         if (isset(self::$moduleFiles)) {
             foreach (self::$moduleFiles as $moduleFile) {
                 $head .= '<script type="module" src="/js/' . $moduleFile . '" defer></script>';
+            }
+        }
+
+        // Dynamically add additional JavaScript link files if they are set.
+        if (isset(self::$scriptLinkFiles)) {
+            foreach (self::$scriptLinkFiles as $scriptLinkFile) {
+                $head .= '<script src="' . $scriptLinkFile . '" defer></script>';
             }
         }
 

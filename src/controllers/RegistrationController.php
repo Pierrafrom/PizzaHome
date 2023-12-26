@@ -31,7 +31,7 @@ class RegistrationController extends Controller
      * The constructor first calls the parent constructor of the Controller class for general
      * initialization tasks, such as setting the view path. Then, it customizes the setup for
      * the registration and login pages by specifying relevant CSS files (like 'banner.css' and
-     * 'registration.css') for page styling, and JavaScript files ('tabs.js' for tab functionality
+     * 'form.css') for page styling, and JavaScript files ('tabs.js' for tab functionality
      * and 'registration.js' for handling registration and login processes) to enhance the
      * user experience and interactivity on these pages.
      *
@@ -41,7 +41,7 @@ class RegistrationController extends Controller
     {
         parent::__construct($viewPath); // Call the parent constructor for basic setup
         self::$title = "Registration"; // Set the title specific to the registration and login pages
-        self::$cssFiles = ["banner.css", "registration.css"]; // Define CSS files for page styling
+        self::$cssFiles = ["form.css"]; // Define CSS files for page styling
         self::$scriptFiles = ["tabs.js"]; // Include JavaScript files for tab functionality
         self::$moduleFiles = ["registration.js"]; // Include JavaScript modules for registration and login processes
     }

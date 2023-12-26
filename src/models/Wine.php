@@ -83,6 +83,10 @@ class Wine extends Food
      */
     private string $color;
 
+    private int $stock;
+
+    private string $bottleType;
+
     /**
      * Constructor for the Wine class. Initializes a new Wine object with specified attributes.
      * If an ID is provided and valid, the object is populated with the given parameters; otherwise, default values are used.
@@ -117,7 +121,9 @@ class Wine extends Food
                                 ?string $origin = null,
                                 ?float  $alcoholPercentage = null,
                                 ?int    $year = null,
-                                ?string $color = null)
+                                ?string $color = null,
+                                ?int    $stock = null,
+                                ?string $bottleType = null)
     {
         if (!is_null($id)) {
             if (!is_null($color) && !in_array($color, WineColor::cases())) {
@@ -134,6 +140,8 @@ class Wine extends Food
             $this->alcoholPercentage = $alcoholPercentage ?? 12.0;
             $this->year = $year ?? 2020;
             $this->color = $color ?? WineColor::RED;
+            $this->stock = $stock ?? 0;
+            $this->bottleType = $bottleType ?? 'BOTTLE';
         }
     }
 
@@ -259,7 +267,9 @@ class Wine extends Food
                        origin, 
                        alcoholPercentage, 
                        year,
-                       color 
+                       color,
+                       stock,
+                       bottleType
                     FROM VIEW_WINE";
 
         $wines = DB_Connection::query($sql, [], self::class);
@@ -298,7 +308,9 @@ class Wine extends Food
                        origin, 
                        alcoholPercentage, 
                        year,
-                       color 
+                       color,
+                       stock,
+                       bottleType
                     FROM VIEW_WINE
                     WHERE color = 'WHITE'";
 
@@ -338,7 +350,9 @@ class Wine extends Food
                        origin, 
                        alcoholPercentage, 
                        year,
-                       color 
+                       color,
+                       stock,
+                       bottleType
                     FROM VIEW_WINE
                     WHERE color = 'RED'";
 
@@ -378,7 +392,9 @@ class Wine extends Food
                        origin, 
                        alcoholPercentage, 
                        year,
-                       color 
+                       color,
+                       stock,
+                       bottleType
                     FROM VIEW_WINE
                     WHERE color = 'ROSE'";
 
@@ -462,9 +478,9 @@ class Wine extends Food
     /**
      * Retrieves a Wine instance from the database by its ID.
      *
-     * @throws InvalidArgumentException If the provided ID does not match any wine in the database.
      * @param int $id
      * @return object|array
+     * @throws InvalidArgumentException If the provided ID does not match any wine in the database.
      */
     public static function getById(int $id): object|array
     {
@@ -478,7 +494,9 @@ class Wine extends Food
                        origin, 
                        alcoholPercentage, 
                        year,
-                       color 
+                       color,
+                       stock,
+                       bottleType
                     FROM VIEW_WINE
                     WHERE id = :id";
 

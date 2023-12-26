@@ -27,7 +27,7 @@ $eyeIcons = '<svg xmlns="http://www.w3.org/2000/svg" height="1em" class="eye-ico
 
 <div class="main-container">
     <section>
-        <div class="registration-container">
+        <div class="form-container">
             <div class="welcome">
                 <img src="/img/logo.svg" alt="Logo">
                 <h1>Welcome !</h1>

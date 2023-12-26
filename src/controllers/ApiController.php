@@ -243,4 +243,36 @@ class ApiController
             }
         }
     }
+
+
+    public function updatestockQuantity(): void
+    {
+        // Check if the current request is a POST request
+        if ($this->isPostRequest()) {
+            // Read the JSON data from the request body
+            $jsonRequestBody = file_get_contents('php://input');
+            $requestData = json_decode($jsonRequestBody, true);
+
+            // Retrieve the product ID from POST data, default to null if not set
+            $productId = $requestData['stockId'] ?? null;
+            $productType = $requestData['stockType'] ?? null;
+            $newQuantity = $requestData['newQuantity'] ?? 0;
+
+            // Check if the product ID and type are provided and the new quantity is valid
+            if ($productId !== null && $productType !== null && $newQuantity > 0) {
+                try {
+                    // Call the method to update the product quantity in the cart
+                    $result = AdminController::updateStockQuantity($productId, $productType, $newQuantity);
+                    // Send the response back with the result
+                    $this->sendResponse(['success' => $result]);
+                } catch (Exception $e) {
+                    // Handle any exceptions by sending an error response
+                    $this->sendResponse(['success' => false, 'message' => $e->getMessage()]);
+                }
+            } else {
+                // Send an error response if product ID, type, or new quantity is missing or invalid
+                $this->sendResponse(['success' => false, 'message' => 'Invalid product information or quantity.']);
+            }
+        }
+    }
 }

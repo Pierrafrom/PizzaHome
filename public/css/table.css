@@ -1,0 +1,33 @@
+table {
+    width: 100%;
+    border-spacing: 0;
+    background: var(--glass);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    max-width: 2000px;
+    margin: 0 auto;
+}
+
+th, td {
+    text-align: center;
+    vertical-align: middle;
+    font-family: 'Barlow', sans-serif;
+    color: var(--text);
+}
+
+th {
+
+    font-size: 1.2em;
+    font-weight: 600;
+    padding: 1em;
+}
+
+td {
+    font-size: 1em;
+    font-weight: 400;
+    padding: 5px 0;
+}
+
+
