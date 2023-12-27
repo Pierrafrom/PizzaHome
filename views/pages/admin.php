@@ -47,18 +47,18 @@
 </section>
 
 <ul class="tabs" role="tablist">
-    <li><a href="#graphics-tab" class="tab active-tab" role="tab" aria-controls="graphics-tab" aria-selected="true"
-           id="tab1">Graphics</a>
+    <li><a href="#graphics-section" class="tab" role="tab" aria-controls="graphics-section" aria-selected="true"
+           id="graphics-tab">Graphics</a>
     </li>
-    <li><a href="#stock-tab" class="tab" role="tab" aria-controls="stock-tab" aria-selected="false"
-           id="tab2">Stocks</a>
+    <li><a href="#stock-section" class="tab" role="tab" aria-controls="stock-section" aria-selected="false"
+           id="stock-tab">Stocks</a>
     </li>
-    <li><a href="#menu-tab" class="tab" role="tab" aria-controls="menu-tab" aria-selected="false"
-           id="tab3">Menu</a>
+    <li><a href="#menu-section" class="tab" role="tab" aria-controls="menu-section" aria-selected="false"
+           id="menu-tab">Menu</a>
     </li>
 </ul>
 
-<section id="graphics-tab" class="tab-content show-flex">
+<section id="graphics-section" class="tab-content hide">
     <div class="container">
         <h2>Graphics</h2>
 
@@ -66,7 +66,7 @@
     </div>
 </section>
 
-<section id="stock-tab" class="tab-content hide">
+<section id="stock-section" class="tab-content hide">
     <h2>Stocks</h2>
     <div class="container">
         <h3>Ingredients</h3>
@@ -96,7 +96,7 @@
     </div>
 </section>
 
-<section id="menu-tab" class="tab-content hide">
+<section id="menu-section" class="tab-content hide">
     <div class="container">
         <h2>Menu</h2>
 

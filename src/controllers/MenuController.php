@@ -38,7 +38,7 @@ class MenuController extends Controller
     {
         parent::__construct($viewPath); // Call the parent constructor for basic setup
         self::$title = "Menu"; // Set the title specific to the menu page
-        self::$cssFiles = ["banner.css", "menu.css"]; // Define CSS files for the menu page styling
+        self::$cssFiles = ["banner.css", "menu.css", "add-to-cart-btn.css"]; // Define CSS files for the menu page styling
         self::$scriptFiles = ["tabs.js", "quantity-controls.js"]; // Include JavaScript files for interactive elements
         self::$moduleFiles = ["add-to-cart.js"]; // Include JavaScript module for adding items to the cart
     }
@@ -107,14 +107,15 @@ class MenuController extends Controller
                 $output .= '<div class="menu-btns">';
                 $output .= '<div class="quantity-control">';
                 $output .= '<button class="btn-quantity btn-minus">-</button>';
-                $output .= '<span class="product-quantity" data-product-id="' . $food->id . '">0</span>';
+                $output .= '<span class="product-quantity" data-product-id="' . $food->id . '">1</span>';
                 $output .= '<button class="btn-quantity btn-plus">+</button>';
                 $output .= '</div>';
-                $output .= '<button class="btn-primary add-to-cart" 
+                $output .= '<button class="add-to-cart" 
                             data-product-id="' . $food->id . '"
                             data-product-type="' . $productType . '">
-                            Add to Cart
-                  </button>';
+                            <img src="/img/icons/cart-plus.svg" alt="add to cart icon" class="cart-plus show-flex">
+                            <img src="/img/icons/cart-check.svg" alt="add to cart icon" class="cart-check hide">
+                            </button>';
                 $output .= '</div>';
                 $output .= '</div>';
             }

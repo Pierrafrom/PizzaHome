@@ -42,6 +42,9 @@
 .arrow-down {
     fill: white;
     transition: transform 0.3s ease;
+    height: 40px;
+    width: 40px;
+    filter: none;
 }
 
 .arrow-down:hover {

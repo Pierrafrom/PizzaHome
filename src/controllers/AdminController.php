@@ -2,6 +2,7 @@
 
 namespace App\controllers;
 
+use App\DB_Connection;
 use App\models\Ingredient;
 use App\models\Soda;
 use App\models\Wine;
@@ -14,7 +15,7 @@ class AdminController extends Controller
     {
         parent::__construct($viewPath);
         self::$title = 'Admin';
-        self::$cssFiles = ["banner.css", "admin.css","table.css"];
+        self::$cssFiles = ["banner.css", "admin.css", "table.css"];
         self::$scriptFiles = ["tabs.js", "chart.js", "cheese-chart1.js", "cheese-chart2.js", "cheese-chart3.js", "cheese-chart4.js"];
         self::$scriptLinkFiles = ["https://cdn.jsdelivr.net/npm/apexcharts"];
         self::$moduleFiles = ["admin.js"];
@@ -77,5 +78,33 @@ class AdminController extends Controller
                 return '<p>An error occurred while loading the ' . $itemName . ' section.</p>';
             }
         }
+    }
+
+    /**
+     * Updates the stock quantity of a product.
+     * 
+     * @param int $productId The ID of the product to update.
+     * @param string $productType The type of the product to update.
+     * @param float $newQuantity The new quantity of the product.
+     * 
+     * @return bool True if the update was successful, false otherwise.
+     * 
+     * @throws InvalidArgumentException If the product type is invalid.
+     */
+    public static function updateStockQuantity(int $productId, string $productType, float $newQuantity): bool
+    {
+        switch ($productType) {
+            case 'Ingredient':
+                DB_Connection::callProcedure('UpdateIngredientStock', ['ingredientID' => $productId, 'newQuantity' => $newQuantity]);
+                return true;
+            case 'Wine':
+                DB_Connection::callProcedure('UpdateWineStock', ['wineID' => $productId, 'newQuantity' => $newQuantity]);
+                return true;
+            case 'Soda':
+                DB_Connection::callProcedure('UpdateSodaStock', ['sodaID' => $productId, 'newQuantity' => $newQuantity]);
+                return true;
+            default:
+                throw new InvalidArgumentException('Invalid product type.');
+        };
     }
 }

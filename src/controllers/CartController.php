@@ -205,7 +205,6 @@ class CartController extends Controller
                 throw new Exception($e->getMessage());
             } else {
                 throw new Exception('An error occurred while retrieving the cart.');
-
             }
         }
         return $cartWithObjects;
@@ -372,5 +371,31 @@ class CartController extends Controller
 
         // If the product was not found in the cart, throw an exception
         throw new Exception('The product was not found in the cart.');
+    }
+
+    /**
+     * Calculates the total number of items in the shopping cart.
+     *
+     * This function iterates through each product type in the cart and sums up the quantities
+     * of each product to get the total number of items in the cart.
+     *
+     * @return int The total number of items in the cart.
+     */
+    public static function getTotalItemsInCart(): int
+    {
+        $totalItems = 0;
+
+        // Vérifiez d'abord si le panier existe
+        if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
+            // Parcourez chaque type de produit dans le panier
+            foreach ($_SESSION['cart'] as $productType => $products) {
+                // Parcourez chaque produit et additionnez les quantités
+                foreach ($products as $product) {
+                    $totalItems += $product['quantity'];
+                }
+            }
+        }
+
+        return $totalItems;
     }
 }

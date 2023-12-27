@@ -28,7 +28,7 @@ class HomeController extends Controller
     {
         parent::__construct($viewPath); // Call the parent constructor to set the view path
         self::$title = "Home"; // Set the title for the home page
-        self::$cssFiles = ["banner.css", "home.css"]; // Specify CSS files for the home page
+        self::$cssFiles = ["banner.css", "home.css", "add-to-cart-btn.css"]; // Specify CSS files for the home page
         self::$moduleFiles = ["add-to-cart.js"]; // Specify JavaScript module files for the home page
     }
 
@@ -132,8 +132,11 @@ class HomeController extends Controller
             $html .= '<div class="product-details">';
             $html .= '<h3>' . htmlspecialchars($product->name) . '</h3>';
             $html .= $product->getDescription();
-            $html .= '<button class="btn-primary add-to-cart" data-product-id="' . $product->id .
-                '" data-product-type="' . $productType . '">Add to Cart</button>';
+            $html .= '<button class="add-to-cart" data-product-id="' . $product->id .
+                '" data-product-type="' . $productType . '">
+                <img src="/img/icons/cart-plus.svg" alt="add to cart icon" class="cart-plus show-flex">
+                <img src="/img/icons/cart-check.svg" alt="add to cart icon" class="cart-check hide">
+                </button>';
             $html .= '</div>';
             $html .= '</article>';
         }

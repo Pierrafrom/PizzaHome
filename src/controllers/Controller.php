@@ -142,7 +142,7 @@ abstract class Controller
             require $layoutFilePath;
         } catch (Exception $e) {
             // Handle the exception, e.g., by logging the error and displaying an error message to the user.
-            echo($e->getMessage());
+            echo ($e->getMessage());
             echo "An error occurred while loading the page.";
         }
     }
@@ -188,6 +188,8 @@ abstract class Controller
             $isConnected = true;
         }
 
+        $totalItems = CartController::getTotalItemsInCart();
+
         // Prepare the HTML menu string based on the user's login status.
         $menu = "";
         if ($isConnected) {
@@ -195,7 +197,12 @@ abstract class Controller
             $menu = "<ul class='nav-links' style='width: calc(100% - 48px);'>
                     <li><a href='/'><span>Home</span></a></li>
                     <li><a href='/menu'>Menu</a></li>
-                    <li><a href='/cart'>Cart</a></li>
+                    <li class=\"cart-icon\">
+                        <a href=\"/cart\">
+                            <img src=\"/img/icons/cart.svg\" alt=\"Cart\">
+                            <span id=\"cart-count\" class=\"cart-count\">$totalItems</span> 
+                        </a>
+                    </li>
                 </ul>
                 <div class='user-info'>
                     <div><img id='avatar-img' src='/img/avatar.png' alt='User-avatar'></div>
@@ -214,7 +221,12 @@ abstract class Controller
             $menu = "<ul class='nav-links'>
                     <li><a href='/'><span>Home</span></a></li>
                     <li><a href='/menu'>Menu</a></li>
-                    <li><a href='/cart'>Cart</a></li>
+                    <li class=\"cart-icon\">
+                        <a href=\"/cart\">
+                            <img src=\"/img/icons/cart.svg\" alt=\"Cart\">
+                            <span id=\"cart-count\" class=\"cart-count\">$totalItems</span> 
+                        </a>
+                    </li>
                 </ul>
                 <div class='auth-buttons'>
                     <a href='/registration?redirect=" . urlencode($_SERVER['REQUEST_URI']) . "#login'
@@ -286,5 +298,4 @@ abstract class Controller
         // Store the head section HTML in the view data for use in the view templates.
         $this->viewData['head'] = $head;
     }
-
 }

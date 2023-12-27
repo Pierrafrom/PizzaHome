@@ -14,12 +14,13 @@ class Ingredient
     private string $unit;
     private bool $isAllergen;
 
-    public function __construct(?int    $id = null,
-                                ?string $name = null,
-                                ?int    $stock = null,
-                                ?string $unit = null,
-                                ?bool   $isAllergen = null)
-    {
+    public function __construct(
+        ?int    $id = null,
+        ?string $name = null,
+        ?int    $stock = null,
+        ?string $unit = null,
+        ?bool   $isAllergen = null
+    ) {
         if (!is_null($id)) {
             $this->id = self::$autoIncrementId++;
             $this->name = $name ?? 'My Ingredient';
@@ -67,5 +68,4 @@ class Ingredient
 
         return $ingredients;
     }
-
 }

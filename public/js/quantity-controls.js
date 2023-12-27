@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (this.classList.contains('btn-plus')) {
                 quantitySpan.textContent = (currentQuantity + 1).toString();
-            } else if (this.classList.contains('btn-minus') && currentQuantity > 0) {
+            } else if (this.classList.contains('btn-minus') && currentQuantity > 1) {
                 quantitySpan.textContent = (currentQuantity - 1).toString();
             }
         });

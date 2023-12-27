@@ -91,6 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
 async function handleRemoveButtonClick(event) {
     const productId = event.target.getAttribute("data-product-id");
     const productType = event.target.getAttribute("data-product-type");
+    const productQuantity = event.target.getAttribute("data-product-quantity");
 
     try {
         // Send a POST request to remove the product from the cart

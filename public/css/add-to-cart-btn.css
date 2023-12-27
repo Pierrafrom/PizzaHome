@@ -1,0 +1,24 @@
+.add-to-cart{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary);
+    padding: 25px;
+    border-radius: 50%;
+    border: none;
+}
+
+.add-to-cart:hover{
+    background-color: var(--primary-hover);
+    cursor: pointer;
+}
+
+.add-to-cart img{
+    width: 30px;
+    height: 30px;
+}
+
+.cart-plus, .cart-check {
+    transition: opacity 0.3s ease-in-out;
+    position: absolute; /* Aligner les icônes */
+}
