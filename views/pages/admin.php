@@ -49,10 +49,10 @@
 <section>
     <div id="chart-1"></div>
     <div class="cheese-chart-container">
-        <div class="item" id="cheese-chart1"></div>
-        <div class="item" id="cheese-chart2"></div>
-        <div class="item" id="cheese-chart3"></div>
-        <div class="item" id="cheese-chart4"></div>
+        <div class="item" id="pizza"></div>
+        <div class="item" id="dessert"></div>
+        <div class="item" id="wine"></div>
+        <div class="item" id="cocktail"></div>
     </div>
 </section>
 
