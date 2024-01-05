@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  // Add click event listeners for all duplicate buttons.
   duplicateButtons.forEach(function (button) {
     button.addEventListener("click", function () {
       const elementToDuplicate = this.parentNode.previousElementSibling;
@@ -54,6 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  // Add click event listeners for all delete buttons.
   updateDeleteSelector();
   updateDeleteButtonsVisibility();
 });
@@ -86,49 +88,63 @@ function validateForm(form) {
  */
 function duplicateElement(element) {
   if (!element || !(element instanceof HTMLElement)) {
-      console.error("Invalid element provided for duplication.");
-      return;
+    console.error("Invalid element provided for duplication.");
+    return;
   }
 
   if (typeof max !== "undefined") {
-      if (document.querySelectorAll(".toDuplicate").length >= max) {
-          return;
-      } else if (document.querySelectorAll(".toDuplicate").length === max - 1) {
-          document.querySelectorAll(".duplicate-btn").forEach(function (button) {
-              button.classList.add("disabled");
-          });
-          document.querySelectorAll(".add-btn").forEach(function (button) {
-              button.classList.add("disabled");
-          });
-      }
+    if (document.querySelectorAll(".toDuplicate").length >= max) {
+      return;
+    } else if (document.querySelectorAll(".toDuplicate").length === max - 1) {
+      document.querySelectorAll(".duplicate-btn").forEach(function (button) {
+        button.classList.add("disabled");
+      });
+      document.querySelectorAll(".add-btn").forEach(function (button) {
+        button.classList.add("disabled");
+      });
+    }
   }
 
+  // Clone the element
   const clonedElement = element.cloneNode(true);
   clonedElement.removeAttribute("id");
-  clonedElement.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+  clonedElement
+    .querySelectorAll("[id]")
+    .forEach((el) => el.removeAttribute("id"));
 
   // Modify name attributes
   clonedElement.querySelectorAll("[name]").forEach((input) => {
-      let name = input.getAttribute("name");
-      let newName = modifyNameAttribute(name);
-      input.setAttribute("name", newName);
+    let name = input.getAttribute("name");
+    let newName = modifyNameAttribute(name);
+    input.setAttribute("name", newName);
   });
 
+  // Reset input values
   element.parentNode.insertBefore(clonedElement, element.nextSibling);
   updateDeleteSelector();
 }
 
+/**
+ * Modifies the name attribute of a given input field.
+ * If the name ends with a number, it is incremented by 1.
+ * Otherwise, the name is appended with '-1'.
+ *
+ * @param {string} name - The name attribute to be modified.
+ */
 function modifyNameAttribute(name) {
   // Check if name ends with a number
   let match = name.match(/(\d+)$/);
   if (match) {
-      let number = parseInt(match[0], 10);
-      return name.replace(/(\d+)$/, number + 1);
+    let number = parseInt(match[0], 10);
+    return name.replace(/(\d+)$/, number + 1);
   } else {
-      return name + '-1';
+    return name + "-1";
   }
 }
 
+/**
+ * Updates the event listeners for all delete buttons.
+ */
 function updateDeleteSelector() {
   document.querySelectorAll(".delete-btn").forEach(function (button) {
     button.addEventListener("click", function () {
@@ -138,8 +154,11 @@ function updateDeleteSelector() {
   });
 }
 
+/**
+ * Updates the visibility of all delete buttons.
+ */
 function updateDeleteButtonsVisibility() {
-  // Comptez le nombre d'éléments duplicables
+  // Select all delete buttons and count the number of elements to duplicate
   const deleteButtons = document.querySelectorAll(".delete-btn");
   const numberOfElements = document.querySelectorAll(".toDuplicate").length;
 
@@ -152,7 +171,6 @@ function updateDeleteButtonsVisibility() {
       button.classList.remove("show-flex");
     }
 
-    // si on a les boutons de duplication désactivés, on les réactive
     if (numberOfElements < max) {
       document.querySelectorAll(".duplicate-btn").forEach(function (button) {
         button.classList.remove("disabled");
@@ -160,6 +178,5 @@ function updateDeleteButtonsVisibility() {
     }
   });
 
-  // Ré-attachez les écouteurs d'événements pour les nouveaux boutons de suppression
   updateDeleteSelector();
 }

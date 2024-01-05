@@ -1,4 +1,21 @@
+/**
+ * ProductChart class
+ * @class
+ * @classdesc This class is used to create a chart for each product type
+ *
+ * @param {HTMLElement} chartElement - The element that will contain the chart
+ * @param {string} title - The title of the chart
+ * @param {Array} series - The data series for the chart
+ * @param {Array} productList - The list of products
+ */
 export class ProductChart {
+  /**
+   *
+   * @param {HTMLElement} chartElement
+   * @param {string} title
+   * @param {Array} series
+   * @param {Array} productList
+   */
   constructor(chartElement, title, series, productList) {
     this.chartElement = chartElement;
     this.title = title;
@@ -6,6 +23,12 @@ export class ProductChart {
     this.productList = productList;
   }
 
+  /**
+   * Creates the chart options for ApexCharts.
+   * Configures the appearance and behavior of the chart.
+   *
+   * @returns {Object} - The options object for ApexCharts configuration.
+   */
   initializeChart() {
     let options = {
       series: this.series,
@@ -61,6 +84,16 @@ export class ProductChart {
     new ApexCharts(this.chartElement, options).render();
   }
 
+  /**
+   * Fetches the top products from the server and creates a chart for each product type.
+   *
+   * @async
+   * @static
+   * @method
+   * @returns {Promise} - The Promise object that resolves when the charts are created.
+   * @throws {Error} - Network response was not ok.
+   * @throws {Error} - Invalid product quantity.
+   */
   static async fetchAndCreateCharts() {
     try {
       const url = "/api/getTopProducts";

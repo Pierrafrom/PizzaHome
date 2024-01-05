@@ -1,10 +1,30 @@
+/**
+ * Class representing a chart for displaying pizza sales data.
+ * Utilizes ApexCharts library to render a bar chart based on provided sales data.
+ */
 export class PizzaSalesChart {
+  /**
+   * Constructor for PizzaSalesChart.
+   * @param {HTMLElement} chartElement - The DOM element where the chart will be rendered.
+   * @param {Array} series - The data series for the chart.
+   * @param {Array} categories - The categories (labels) for the chart.
+   */
   constructor(chartElement, series, categories) {
     this.chartElement = chartElement;
     this.series = series; // Les données des ventes
     this.categories = categories; // Les noms des pizzas
   }
 
+  /**
+   * Creates chart options for ApexCharts.
+   * Configures the appearance and behavior of the chart.
+   *
+   * @param {Array} pizzaNames - Names of the pizzas.
+   * @param {Array} soldToday - Number of pizzas sold today.
+   * @param {Array} soldYesterday - Number of pizzas sold yesterday.
+   * @param {Array} soldLastWeekSameDay - Number of pizzas sold last week on the same day.
+   * @returns {Object} - The options object for ApexCharts configuration.
+   */
   static createChartOptions(
     pizzaNames,
     soldToday,
@@ -92,6 +112,11 @@ export class PizzaSalesChart {
     };
   }
 
+  /**
+   * Fetches sales data from an API and creates a chart.
+   * This is a static method and can be called without instantiating the class.
+   * It fetches the pizza sales data, creates chart options, and renders the chart.
+   */
   static async fetchAndCreateCharts() {
     try {
       const url = "/api/getPizzaStats";

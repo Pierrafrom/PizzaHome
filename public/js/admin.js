@@ -35,11 +35,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  // Add an event listener to all 'Remove' buttons
   const removeButtons = document.querySelectorAll(".btn-remove");
   removeButtons.forEach((button) => {
     button.addEventListener("click", handleRemoveButtonClick);
   });
 
+  // Add an event listener to all 'Spotlight' checkboxes
   const spotlightsCheckboxes = document.querySelectorAll(".spotlight-checkbox");
   spotlightsCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener("change", handleSpotlightCheckboxChange);
@@ -68,9 +70,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  // Add an event listener to the 'Cancel' button for updating the stock quantity
   const decrementButtons = document.querySelectorAll(".decrement-button");
   const incrementButtons = document.querySelectorAll(".increment-button");
 
+  // Add an event listener to all 'Remove' buttons
   decrementButtons.forEach((button) => {
     button.addEventListener("click", function () {
       const input = this.nextElementSibling;
@@ -170,6 +174,9 @@ function setupTabsListeners() {
   });
 }
 
+/**
+ * Displays the active tab based on the URL hash value.
+ */
 function showTab() {
   // Récupérer l'ID de l'onglet actif
   const hash = window.location.hash;

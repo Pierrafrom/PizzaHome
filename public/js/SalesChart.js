@@ -1,4 +1,21 @@
+/**
+ * SalesChart class
+ * @class
+ * @classdesc This class is used to create a sales chart using ApexCharts
+ *
+ * @param {HTMLElement} chartElement - The element that will contain the chart
+ * @param {string} title - The title of the chart
+ * @param {Array} series - The data series for the chart
+ * @param {Array} categories - The categories (labels) for the chart
+ */
 export class SalesChart {
+  /**
+   *
+   * @param {HTMLElement} chartElement - The element that will contain the chart
+   * @param {string} title - The title of the chart
+   * @param {Array} series - The data series for the chart
+   * @param {Array} categories - The categories (labels) for the chart
+   */
   constructor(chartElement, title, series, categories) {
     this.chartElement = chartElement;
     this.title = title;
@@ -6,6 +23,16 @@ export class SalesChart {
     this.categories = categories;
   }
 
+  /**
+   * Creates the chart options for ApexCharts.
+   * Configures the appearance and behavior of the chart.
+   *
+   * @returns {Object} - The options object for ApexCharts configuration.
+   * @memberof SalesChart
+   * @instance
+   * @method initializeChart
+   * @public
+   */
   initializeChart() {
     let options = {
       series: [
@@ -62,18 +89,28 @@ export class SalesChart {
         },
       },
       tooltip: {
-        theme: "dark", // Vous pouvez choisir un thème prédéfini ou personnalisé
+        theme: "dark", // dark, light
         style: {
-          fontSize: '12px',
+          fontSize: "12px",
           fontFamily: "Barlow, sans-serif",
           colors: ["#202020"],
         },
       },
     };
-    
+
     new ApexCharts(this.chartElement, options).render();
   }
 
+  /**
+   * Fetches the sales data from the server and creates the sales chart.
+   *
+   * @async
+   * @memberof SalesChart
+   * @instance
+   * @method fetchAndCreateCharts
+   * @public
+   * @static
+   */
   static async fetchAndCreateCharts() {
     try {
       const response = await fetch("/api/getSalesByMonth", {
