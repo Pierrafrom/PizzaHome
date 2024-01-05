@@ -6,6 +6,29 @@ use App\DB_Connection;
 use InvalidArgumentException;
 use Exception;
 
+/**
+ * The PizzaCustom class extends the Pizza class and represents a specific custom pizza.
+ * It manages the creation of custom pizzas either by loading from the database
+ * or by manual initialization with provided values.
+ * @package App\models
+ * 
+ * properties:
+ * @property int $id
+ * @property int $originalPizzaId
+ * @property string $name
+ * @property float $price
+ * @property bool $spotlight
+ * @property array $ingredients
+ * 
+ * methods:
+ * @method static PizzaCustom getById(int $id)
+ * @method static PizzaCustom[] getAllPizzas()
+ * @method static string generateSpecificSection()
+ * @method string __toString()
+ * @method void __set(string $property, mixed $value)
+ * @method mixed __get(string $property)
+ * @method void __construct(?int $id = null, ?int $originalPizzaId = null, ?string $name = null, ?float $price = null, ?bool $spotlight = null, ?array $ingredients = null)
+ */
 class PizzaCustom extends Pizza
 {
     /**
@@ -52,12 +75,10 @@ class PizzaCustom extends Pizza
      */
     protected function loadFromDatabaseById(int $id): void
     {
-        // D'abord, vérifier que l'ID est valide.
         if (!is_numeric($id)) {
             throw new InvalidArgumentException("ID must be numeric");
         }
 
-        // Charger les détails de la pizza originale depuis la base de données.
         $sql = "SELECT OriginalPizzaId FROM VIEW_CUSTOM_PIZZAS_WITH_INGREDIENTS WHERE CustomPizzaId = :id LIMIT 1";
         $res = DB_Connection::query($sql, ['id' => $id])[0]['OriginalPizzaId'];
 
@@ -68,12 +89,9 @@ class PizzaCustom extends Pizza
         }
 
         parent::__construct($this->originalPizzaId);
-
-        // Charger les ingrédients supplémentaires et les ingrédients supprimés
         $sql = "SELECT IngredientAddedId, IngredientRemovedId FROM VIEW_CUSTOM_PIZZAS_WITH_INGREDIENTS WHERE CustomPizzaId = :id";
         $customIngredients = DB_Connection::query($sql, ['id' => $id]);
 
-        // Ajouter/supprimer les ingrédients et ajuster le prix
         $additionalPrice = 0;
         foreach ($customIngredients as $ingredientDetails) {
             if ($ingredientDetails['IngredientAddedId']) {
@@ -93,6 +111,11 @@ class PizzaCustom extends Pizza
         $this->id = $id;
     }
 
+    /**
+     * Returns all custom pizzas from the database.
+     * 
+     * @return PizzaCustom[] An array of custom pizzas.
+     */
     public function __get($property)
     {
         if ($property == 'originalPizzaId') {
@@ -101,6 +124,15 @@ class PizzaCustom extends Pizza
         return parent::__get($property);
     }
 
+    /**
+     * Magic setter to set protected properties of the class.
+     * 
+     * @param string $property The property name to set.
+     * @param mixed $value The value to set the property to.
+     * 
+     * @throws InvalidArgumentException If the property does not exist or the value is of the incorrect type.
+     * @return void
+     */
     public function __set($property, $value)
     {
         if ($property == 'originalPizzaId') {
@@ -113,6 +145,11 @@ class PizzaCustom extends Pizza
         }
     }
 
+    /**
+     * Returns all custom pizzas from the database.
+     * 
+     * @return PizzaCustom[] An array of custom pizzas.
+     */
     public static function getById(int $id): PizzaCustom
     {
         return new self($id);

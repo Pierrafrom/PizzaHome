@@ -16,10 +16,19 @@ class Soda extends Food
      */
     private static int $autoIncrementId = 1;
 
+    /**
+     * @var int The unique identifier of the soda.
+     */
     public int $stock;
 
+    /**
+     * @var string The type of bottle of the soda.
+     */
     public string $bottleType;
 
+    /**
+     * @var array An array of form fields to display when editing the soda.
+     */
     public static $formFields = [
         'name' => ['type' => 'text', 'placeholder' => 'Name of the Soda', 'required' => true],
         'price' => ['type' => 'number', 'placeholder' => 'Price', 'required' => true],
@@ -141,6 +150,10 @@ class Soda extends Food
         return $sodas;
     }
 
+    /**
+     * Generates a string of HTML code to display a form for editing a Soda instance.
+     * @return string The HTML code to display the form.
+     */
     public static function generateSpecificSection()
     {
         $bottleTypes = ['BOTTLE', 'CAN'];

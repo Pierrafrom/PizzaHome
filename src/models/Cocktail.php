@@ -28,6 +28,9 @@ class Cocktail extends Food
      */
     private float $alcoholPercentage;
 
+    /**
+     * @var array An array of form fields to display when editing the cocktail.
+     */
     public static $formFields = [
         'name' => ['type' => 'text', 'placeholder' => 'Cocktail Name', 'required' => true],
         'price' => ['type' => 'number', 'placeholder' => 'Price', 'required' => true],

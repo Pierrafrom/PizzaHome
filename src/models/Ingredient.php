@@ -5,15 +5,64 @@ namespace App\models;
 use App\DB_Connection;
 use Exception;
 
+/**
+ * The Ingredient class is an abstract class that defines the basic properties and methods
+ * common to food items such as pizzas or desserts. It serves as a base class from which specific
+ * food item classes can be derived.
+ * @package App\models
+ * 
+ * properties:
+ * @property int $id
+ * @property string $name
+ * @property float $stock
+ * @property string $unit
+ * @property bool $isAllergen
+ * @property array $formFields
+ * 
+ * methods:
+ * @method static Ingredient getById(int $id)
+ * @method static Ingredient[] getAllIngredients()
+ * @method static string generateSpecificSection()
+ * @method string __toString()
+ * @method void __set(string $property, mixed $value)
+ * @method mixed __get(string $property)
+ * @method void __construct(?int $id = null, ?string $name = null, ?int $stock = null, ?string $unit = null, ?bool $isAllergen = null)
+ */
 class Ingredient
 {
+    /**
+     * @var int The unique identifier for the food item.
+     */
     private static int $autoIncrementId = 1;
+
+    /** 
+     * @var int The unique identifier for the food item.
+     */
     private int $id;
+
+    /**
+     * @var string The name of the food item.
+     */
     private string $name;
+
+    /**
+     * @var float The price of the food item.
+     */
     private float $stock;
+
+    /**
+     * @var bool Flag indicating whether the food item is featured or not.
+     */
     private string $unit;
+
+    /**
+     * @var bool Flag indicating whether the food item is featured or not.
+     */
     private bool $isAllergen;
 
+    /**
+     * @var array
+     */
     public static $formFields = [
         'name' => ['type' => 'text', 'placeholder' => 'Ingredient Name', 'required' => true],
         'description' => ['type' => 'textarea', 'placeholder' => 'Ingredient Description', 'required' => false],
@@ -21,6 +70,15 @@ class Ingredient
         'isAllergen' => ['type' => 'checkbox', 'required' => true],
     ];
 
+    /**
+     * Ingredient constructor.
+     * 
+     * @param int|null $id
+     * @param string|null $name
+     * @param float|null $stock
+     * @param string|null $unit
+     * @param bool|null $isAllergen
+     */
     public function __construct(
         ?int    $id = null,
         ?string $name = null,
@@ -38,6 +96,11 @@ class Ingredient
     }
 
     /**
+     * Magic getter to access protected properties of the class.
+     * 
+     * @param string $property The property name to access.
+     * 
+     * @return mixed The value of the property.
      * @throws Exception
      */
     public function __get($property)
@@ -50,7 +113,13 @@ class Ingredient
     }
 
     /**
+     * Magic setter to set protected properties of the class.
+     * 
+     * @param string $property The property name to set.
+     * @param mixed $value The value to set the property to.
+     * 
      * @throws Exception
+     * @return void
      */
     public function __set($property, $value)
     {
@@ -64,6 +133,12 @@ class Ingredient
         }
     }
 
+    /**
+     * Returns all ingredients from the database.
+     * 
+     * @return array|object
+     * @throws Exception 
+     */
     public static function getAllIngredients(): object|array
     {
         $sql = "SELECT * FROM VIEW_INGREDIENT WHERE id <> 40";
@@ -76,6 +151,11 @@ class Ingredient
         return $ingredients;
     }
 
+    /**
+     * Returns a string representation of the food item.
+     * 
+     * @return string
+     */
     public function __toString()
     {
         if ($this->isAllergen) {
@@ -85,6 +165,14 @@ class Ingredient
         }
     }
 
+    /**
+     * Returns the ingredient with the given id.
+     * 
+     * @param int $id The id of the ingredient to retrieve.
+     * 
+     * @return object
+     * @throws Exception
+     */
     public static function getById(int $id): object
     {
         $sql = "SELECT * FROM VIEW_INGREDIENT WHERE id = :id";
@@ -93,6 +181,11 @@ class Ingredient
         return $ingredient;
     }
 
+    /**
+     * Returns the HTML code for the specific section of the form.
+     * 
+     * @return string
+     */
     public static function generateSpecificSection()
     {
         $units = ['G', 'KG', 'L', 'CL', 'ML'];

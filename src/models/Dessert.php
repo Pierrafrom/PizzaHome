@@ -23,6 +23,9 @@ class Dessert extends Food
      */
     protected array $ingredients = [];
 
+    /**
+     * @var array An array of form fields to display when editing the dessert.
+     */
     public static $formFields = [
         'name' => ['type' => 'text', 'placeholder' => 'Dessert Name', 'required' => true],
         'price' => ['type' => 'number', 'placeholder' => 'Price', 'required' => true],

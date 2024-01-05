@@ -13,7 +13,7 @@ namespace App\models;
  *
  * @package App\models
  */
-enum WineColor : string
+enum WineColor: string
 {
     /**
      * Represents a red wine color.
@@ -30,4 +30,3 @@ enum WineColor : string
      */
     case ROSE = 'ROSE';
 }
-

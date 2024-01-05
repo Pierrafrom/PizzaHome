@@ -7,11 +7,10 @@ use InvalidArgumentException;
 
 /**
  * Represents a specific type of wine, extending the properties and functionalities of the Food class.
- * This class is designed to handle various characteristics of wine, including its price, domain, grape variety,
- * origin, alcohol percentage, year, and color. It provides methods to create new instances of Wine with
- * specific attributes, access and modify these attributes, and retrieve collections of wine instances
- * filtered by color. Additionally, it offers a display method for menu presentations.
- *
+ * Handles various characteristics of wine, including its price, domain, grape variety, origin, alcohol percentage, year, and color.
+ * Provides methods to create new instances of Wine, access and modify attributes, retrieve collections of wine instances
+ * filtered by color, and format the wine information for menu presentations.
+ * 
  * Properties:
  * - glassPrice: float - The price of a glass of the wine.
  * - domain: string - The domain or brand of the wine.
@@ -20,25 +19,21 @@ use InvalidArgumentException;
  * - alcoholPercentage: float - The alcohol content percentage of the wine.
  * - year: int - The vintage year of the wine.
  * - color: string - The color of the wine (e.g., RED, WHITE, ROSE).
+ * - stock: int - The quantity of the wine in stock.
+ * - bottleType: string - The type of wine bottle.
  *
  * Methods:
- * - __construct: Initializes a new instance of the Wine class with specified attributes.
- * - __toString: Returns a string representation of the wine instance.
- * - __get: Overrides the default getter to retrieve property values.
- * - __set: Overrides the default setter to set property values with validation.
- * - getAllWine: Static method to retrieve all wine instances.
- * - getAllWhiteWine: Static method to retrieve all white wine instances.
- * - getAllRedWine: Static method to retrieve all red wine instances.
- * - getAllRoseWine: Static method to retrieve all rose wine instances.
- * - displayInMenu: Formats the wine information for menu display.
- *
- * Usage Example:
- * ```
- * $wine = new Wine(name: "Chardonnay", price: 20.0, glassPrice: 5.0, domain: "Napa Valley", grapeVariety: "Chardonnay", origin: "California", alcoholPercentage: 13.5, year: 2018, color: "WHITE");
- * echo $wine->displayInMenu();
- * ```
- *
- * Note: This class assumes a database connection through the DB_Connection class for retrieving wine instances.
+ * - __construct: Constructor to initialize a Wine instance with specified attributes.
+ * - __toString: Returns a string representation of the Wine instance.
+ * - __get: Magic getter to retrieve property values.
+ * - __set: Magic setter to set property values with validation.
+ * - getWinesByColor: Retrieves wine entries filtered by color.
+ * - displayInMenu: Formats wine information for menu display.
+ * - getDescription: Retrieves a brief description of the wine.
+ * - getLongDescription: Retrieves a detailed description of the wine.
+ * - getById: Retrieves a Wine instance by its ID.
+ * - getSpotlightWines: Retrieves all spotlight wine entries.
+ * - generateSpecificSection: Generates additional HTML form sections specific to the Wine class.
  */
 class Wine extends Food
 {
@@ -83,10 +78,19 @@ class Wine extends Food
      */
     private string $color;
 
+    /**
+     * @var int stock of the wine.
+     */
     private int $stock;
 
+    /**
+     * @var string bottle type of the wine.
+     */
     private string $bottleType;
 
+    /**
+     * @var array An array of form fields to display when editing the wine.
+     */
     public static $formFields = [
         'name' => ['type' => 'text', 'placeholder' => 'Name of the Wine', 'required' => true],
         'price' => ['type' => 'number', 'placeholder' => 'Bottle Price', 'required' => true],
@@ -419,6 +423,12 @@ class Wine extends Food
         return $wines;
     }
 
+    /**
+     * Generates a string of HTML code to display a form for editing a Wine instance.
+     * @return string The HTML code to display the form.
+     * @throws Exception
+     * @throws InvalidArgumentException
+     */
     public static function generateSpecificSection()
     {
         $bottleTypes = ['BOTTLE', 'PICCOLO', 'MAGNUM', 'JEROBOAM', 'REHOBOAM', 'MATHUSALEM'];

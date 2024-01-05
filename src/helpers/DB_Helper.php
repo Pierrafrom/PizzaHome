@@ -6,6 +6,9 @@ use App\DB_Connection;
 use Exception;
 use PDOException;
 
+/**
+ * A helper class for database operations related to user authentication, email checks, and retrieving statistical data.
+ */
 class DB_Helper
 {
     /**
@@ -74,6 +77,17 @@ class DB_Helper
         return $outParams['emailExists'];
     }
 
+    /**
+     * Handles administrator login by verifying credentials.
+     *
+     * Calls a stored procedure for admin login and validates the provided email and password.
+     *
+     * @param string $email The admin's email address.
+     * @param string $password The admin's password.
+     *
+     * @return int|null Returns the admin's ID if credentials are valid, null if not.
+     * @throws Exception Throws an exception if no admin is found with the given email, or if the password is invalid.
+     */
     public static function adminLogin(string $email, string $password): int|null
     {
         // Call the stored procedure for user login
@@ -100,10 +114,11 @@ class DB_Helper
 
 
     /**
-     * Récupère les données des produits les plus vendus des 30 derniers jours.
+     * Retrieves top selling products for the last 30 days.
      *
-     * @return array Retourne un tableau associatif des données.
-     * @throws PDOException Si une erreur survient lors de l'exécution de la requête.
+     * Executes a query to fetch data from a view that contains information about top-selling products.
+     *
+     * @return array An array of products and their sales data.
      */
     public static function getTopProductsLast30Days(): array
     {
@@ -111,38 +126,46 @@ class DB_Helper
         $sql = "SELECT * FROM VIEW_TOP_PRODUCTS_LAST_30_DAYS";
 
         try {
-            // Utilisation de la méthode query de la classe DB_Connection pour exécuter la requête
             return DB_Connection::query($sql);
         } catch (PDOException $e) {
-            // Gestion des exceptions et renvoi d'un message d'erreur
             throw new PDOException("Erreur lors de la récupération des données : " . $e->getMessage());
         }
     }
 
+    /**
+     * Fetches sales data categorized by month.
+     *
+     * Executes a SQL query to retrieve data regarding revenue for the last six months.
+     *
+     * @return array An array containing monthly sales data.
+     */
     public static function getSalesByMonth(): array
     {
         // SQL query to get data from the view
         $sql = "SELECT * FROM VIEW_REVENUE_LAST_6_MONTHS";
 
         try {
-            // Utilisation de la méthode query de la classe DB_Connection pour exécuter la requête
             return DB_Connection::query($sql);
         } catch (PDOException $e) {
-            // Gestion des exceptions et renvoi d'un message d'erreur
             throw new PDOException("Erreur lors de la récupération des données : " . $e->getMessage());
         }
     }
 
+    /**
+     * Retrieves statistical data about pizza sales.
+     *
+     * Executes a SQL query to fetch statistical data from a view that contains information about pizza sales.
+     *
+     * @return array An array of pizza statistics.
+     */
     public static function getPizzaStats(): array
     {
         // SQL query to get data from the view
         $sql = "SELECT * FROM VIEW_PIZZA_STATS";
 
         try {
-            // Utilisation de la méthode query de la classe DB_Connection pour exécuter la requête
             return DB_Connection::query($sql);
         } catch (PDOException $e) {
-            // Gestion des exceptions et renvoi d'un message d'erreur
             throw new PDOException("Erreur lors de la récupération des données : " . $e->getMessage());
         }
     }

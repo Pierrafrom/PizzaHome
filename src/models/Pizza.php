@@ -23,6 +23,9 @@ class Pizza extends Food
      */
     protected array $ingredients = [];
 
+    /**
+     * @var array An array of form fields to display when editing the pizza.
+     */
     public static $formFields = [
         'name' => ['type' => 'text', 'placeholder' => 'Pizza Name', 'required' => true],
         'price' => ['type' => 'number', 'placeholder' => 'Price', 'required' => true],
@@ -234,11 +237,12 @@ class Pizza extends Food
     }
 
     /**
-     * @throws Exception
+     * Returns a Pizza object by its unique identifier.
+     * 
+     * @param int $id The unique identifier of the pizza.
      */
     public static function getById(int $id): Pizza
     {
         return new self($id);
     }
 }
-  

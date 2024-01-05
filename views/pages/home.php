@@ -45,15 +45,3 @@
         </div>
     </div>
 </section>
-
-<section class="team">
-    <div class="container">
-        <h2>Our Team</h2>
-    </div>
-</section>
-
-<section class="location">
-    <div class="container">
-        <h2>Our Location</h2>
-    </div>
-</section>

@@ -136,6 +136,19 @@ abstract class Food
         return '<p>' . implode(', ', $this->ingredients) . '</p>';
     }
 
+    /**
+     * Generates a string containing a comma-separated list of ingredient names
+     * for the food item, enclosed within a paragraph HTML element.
+     * The method checks if the `$ingredients` property is defined and an array.
+     * If not, it throws an exception. Otherwise, it maps over the `$ingredients` array,
+     * extracting the 'name' of each ingredient and concatenating these names into a
+     * single string separated by commas. The resultant string is sanitized using
+     * `htmlspecialchars()` to prevent XSS attacks when displayed in HTML.
+     * 
+     * @return string Returns a string of ingredient names wrapped in a paragraph tag.
+     *               The special characters in the ingredient names are converted to HTML entities.
+     * @throws Exception If `$ingredients` is not defined or is not an array.
+     */
     public static function generateSpecificSection()
     {
         // si la classe n'est pas une pizza un dessert ou un cocktail exception
