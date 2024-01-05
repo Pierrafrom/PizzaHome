@@ -14,9 +14,39 @@ use App\DB_Connection;
 use Exception;
 use PDOException;
 
-
+/**
+ * CreationController class for handling the creation of various product types like ingredients, wines, sodas, etc.
+ * 
+ * This class extends the base Controller class and includes functionalities for generating creation forms,
+ * validating data, and creating objects in the database.
+ * 
+ * Methods included in this class:
+ * 
+ * - __construct(string $viewPath): Initializes the controller with specific setup for the creation page.
+ * - loadPage(): Loads the creation page with appropriate view data.
+ * - generateCreationForm(): Generates a form for creating a new object based on the given class type.
+ * - createObject(): Processes the POST request to create a new object in the database.
+ * - validateCommonProductData(array $data): Validates common data across different product types.
+ * - createPizza(array $data): Handles the creation of a pizza.
+ * - createWine(array $data): Handles the creation of a wine.
+ * - createSoda(array $data): Handles the creation of a soda.
+ * - createDessert(array $data): Handles the creation of a dessert.
+ * - createCocktail(array $data): Handles the creation of a cocktail.
+ * - createIngredient(array $data): Handles the creation of an ingredient.
+ * - handleIngredients(array $data): Extracts and validates ingredient data from the request.
+ *
+ * @package App\controllers
+ */
 class CreationController extends Controller
 {
+    /**
+     * Constructs the CreationController with a specific view path.
+     * 
+     * Initializes the controller with a title, CSS, and JavaScript files specific to the creation page.
+     * Calls the parent constructor for basic setup.
+     *
+     * @param string $viewPath The base path for the view files.
+     */
     public function __construct(string $viewPath)
     {
         parent::__construct($viewPath); // Call the parent constructor for basic setup
@@ -25,6 +55,12 @@ class CreationController extends Controller
         self::$scriptFiles = ["form.js"]; // Include JavaScript files for tab functionality
     }
 
+    /**
+     * Loads the creation page.
+     * 
+     * Prepares and sets view data including the form and title for the creation page.
+     * Calls the parent method to complete the page loading process.
+     */
     public function loadPage(): void
     {
         $this->viewData = [
@@ -34,6 +70,14 @@ class CreationController extends Controller
         parent::loadPage();
     }
 
+    /**
+     * Generates a creation form for a specified class.
+     * 
+     * Creates a form based on the class specified in the $_GET variable.
+     * Builds the form fields dynamically based on the class's formFields property.
+     * 
+     * @return string The HTML content of the generated form.
+     */
     private function generateCreationForm(): string
     {
         // get the class via the $_GET variable
@@ -92,6 +136,12 @@ class CreationController extends Controller
         return $content;
     }
 
+    /**
+     * Processes the creation of an object based on POST request data.
+     * 
+     * Determines the type of object to be created based on the class name in the POST data.
+     * Delegates the creation process to the respective method based on the object type.
+     */
     public function createObject()
     {
         // si la methode est post
@@ -129,7 +179,11 @@ class CreationController extends Controller
     /**
      * Validates common data across different product types.
      * 
+     * Checks for required fields like name, price, and spotlight status in the provided data.
+     * Throws an exception if validation fails.
+     *
      * @param array $data The data to validate.
+     * @throws Exception If validation fails.
      */
     private static function validateCommonProductData($data)
     {
@@ -155,8 +209,12 @@ class CreationController extends Controller
 
     /**
      * Handles the creation of a pizza.
+     * 
+     * Validates provided data, processes ingredients, and calls the database procedure to create a pizza.
+     * Throws an exception if the creation fails.
      *
      * @param array $data The data from the request.
+     * @throws Exception If pizza creation fails.
      */
     private function createPizza($data)
     {
@@ -188,11 +246,15 @@ class CreationController extends Controller
         }
     }
 
-
     /**
      * Handles the creation of a wine.
+     * 
+     * Validates the provided data and calls the database procedure to create a wine.
+     * Manages specific validation for wine attributes such as glass price, domain, grape variety,
+     * origin, alcohol percentage, year, color, stock, and bottle type.
      *
      * @param array $data The data from the request.
+     * @throws Exception If wine creation fails or validation errors occur.
      */
     private function createWine($data)
     {
@@ -295,8 +357,12 @@ class CreationController extends Controller
 
     /**
      * Handles the creation of a soda.
+     * 
+     * Validates the common product data along with specific soda attributes like stock and bottle type.
+     * Calls the database procedure to create a soda.
      *
      * @param array $data The data from the request.
+     * @throws Exception If soda creation fails or validation errors occur.
      */
     private function createSoda($data)
     {
@@ -337,11 +403,14 @@ class CreationController extends Controller
         }
     }
 
-
     /**
      * Handles the creation of a dessert.
+     * 
+     * Validates the common product data and processes the ingredients.
+     * Calls the database procedure to create a dessert with its ingredients.
      *
      * @param array $data The data from the request.
+     * @throws Exception If dessert creation fails or validation errors occur.
      */
     private function createDessert($data)
     {
@@ -375,8 +444,12 @@ class CreationController extends Controller
 
     /**
      * Handles the creation of a cocktail.
+     * 
+     * Validates the common product data along with specific cocktail attributes like alcohol percentage.
+     * Processes the ingredients and calls the database procedure to create a cocktail.
      *
      * @param array $data The data from the request.
+     * @throws Exception If cocktail creation fails or validation errors occur.
      */
     private function createCocktail($data)
     {
@@ -417,8 +490,12 @@ class CreationController extends Controller
 
     /**
      * Handles the creation of an ingredient.
+     * 
+     * Validates specific ingredient data such as name, stock quantity, description, allergen status, and unit.
+     * Calls the database procedure to create an ingredient.
      *
      * @param array $data The data from the request.
+     * @throws Exception If ingredient creation fails or validation errors occur.
      */
     private function createIngredient($data)
     {
@@ -479,6 +556,16 @@ class CreationController extends Controller
         }
     }
 
+    /**
+     * Handles ingredient data extraction and validation from the provided data array.
+     * 
+     * Extracts ingredient IDs and quantities, validates them, and prepares an array of ingredients.
+     * Ensures the number of valid ingredients is between 1 and 8.
+     *
+     * @param array $data The data array containing ingredient information.
+     * @return array An array of validated ingredients with their IDs and quantities.
+     * @throws Exception If the number of ingredients is invalid.
+     */
     private function handleIngredients($data)
     {
         $ingredients = [];

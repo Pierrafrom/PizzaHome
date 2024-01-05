@@ -8,9 +8,22 @@ use InvalidArgumentException;
 use ReflectionClass;
 
 /**
- * Class Controller
+ * Abstract base Controller class for managing view rendering.
+ * 
+ * This class provides common functionalities to be used by derived controller classes.
+ * It includes handling of view rendering, loading necessary scripts and styles, and managing view data.
+ * 
+ * Methods included in this class:
+ * 
+ * - __construct(string $viewPath): Initializes the controller with the base path for view files.
+ * - __get(string $property): Magic getter to access protected properties.
+ * - loadPage(): Renders a view based on the implementing controller class.
+ * - getViewName(): Determines the view name based on the implementing controller class name.
+ * - getFilePath(string $type, string $name): Builds the file path for a specific view or layout.
+ * - loadMenu(): Loads and prepares the menu HTML based on the user's session status.
+ * - loadHeadSection(): Loads and prepares the head section of the HTML page.
  *
- * An abstract base controller to manage view rendering.
+ * @package App\controllers
  */
 abstract class Controller
 {

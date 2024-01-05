@@ -11,10 +11,35 @@ use App\models\Soda;
 use Exception;
 use InvalidArgumentException;
 
+/**
+ * ProductController Class
+ *
+ * Manages product details, rendering of product details based on product type and id. 
+ * It generates HTML content for displaying product images and details, 
+ * manages quantity controls, and provides functionality for adding items to the cart.
+ *
+ * Methods:
+ * - __construct(string $viewPath): Sets up page title, CSS, and JavaScript files.
+ * - __get(string $property): Magic getter for accessing protected properties.
+ * - loadPage(): Loads the product details page based on product type and id.
+ * - generatePictureTag(string $productType): Generates HTML <picture> tag for product images.
+ * - generateDetails(string $productType): Generates HTML content for product details.
+ *
+ * @package App\controllers
+ */
 class ProductController extends Controller
 {
+    /**
+     * @var Food $product The product to be displayed on the page.
+     */
     private Food $product;
 
+    /**
+     * Constructor for ProductController.
+     * Sets up the page title, CSS, and JavaScript files for the product details page.
+     *
+     * @param string $viewPath The base path for the view files.
+     */
     public function __construct(string $viewPath)
     {
         self::$title = "Details"; // Set the title specific to the menu page
@@ -24,6 +49,14 @@ class ProductController extends Controller
         parent::__construct($viewPath);
     }
 
+    /**
+     * Magic getter to access protected properties of the class.
+     * Specifically, it allows accessing the 'product' property.
+     *
+     * @param string $property The property name to access.
+     * @return mixed The value of the property.
+     * @throws InvalidArgumentException If the property does not exist.
+     */
     public function __get(string $property)
     {
         if ($property == 'product') {
@@ -32,6 +65,13 @@ class ProductController extends Controller
         return parent::__get($property);
     }
 
+    /**
+     * Loads the product details page.
+     * Retrieves product details based on the provided product type and id,
+     * generates HTML content for the product image and details, and then renders the page.
+     *
+     * @throws Exception If the product id or product type is not set or if the product is not found.
+     */
     public function loadPage(): void
     {
         // Get the product id and product type from the url.
@@ -74,7 +114,13 @@ class ProductController extends Controller
         parent::loadPage();
     }
 
-
+    /**
+     * Generates the HTML <picture> tag for the product image.
+     * The image source is based on the product type and the specific image name associated with the product.
+     *
+     * @param string $productType The type of the product (e.g., wine, soda, pizza).
+     * @return string The HTML <picture> tag with the appropriate image sources.
+     */
     private function generatePictureTag(string $productType): string
     {
         $imgDir = '/img/';
@@ -95,6 +141,13 @@ class ProductController extends Controller
                 </picture>";
     }
 
+    /**
+     * Generates HTML content for displaying product details.
+     * The content varies based on the product type and may include ingredient lists, descriptions, and quantity controls.
+     *
+     * @param string $productType The type of the product (e.g., wine, soda, pizza).
+     * @return string The HTML content for the product details.
+     */
     private function generateDetails(string $productType): string
     {
         $html = '<div class="quantity-area">';
