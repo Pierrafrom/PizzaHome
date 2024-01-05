@@ -43,7 +43,7 @@
                 <div class="divided-group">
                     <div class="divided-group">
                         <div class="form-group">
-                            <label for="cardExpiryMonth">Expiry Month :</label>
+                            <label for="cardExpiryMonth">Month:</label>
                             <select id="cardExpiryMonth" name="cardExpiryMonth" required>
                                 <option value="">Month</option>
                                 <?php
@@ -55,7 +55,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="cardExpiryYear">Expiry Year :</label>
+                            <label for="cardExpiryYear">Year:</label>
                             <select id="cardExpiryYear" name="cardExpiryYear" required>
                                 <option value="">Year</option>
                                 <?php

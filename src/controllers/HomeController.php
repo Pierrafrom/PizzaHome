@@ -110,7 +110,7 @@ class HomeController extends Controller
      * @param string $productType The type of products (e.g., 'pizza', 'wine').
      * @return string The HTML content for the provided products.
      */
-    private function generateHTMLForProducts($products, $productType): string
+    private function generateHTMLForProducts(array $products, string $productType): string
     {
         $html = '';
         foreach ($products as $product) {

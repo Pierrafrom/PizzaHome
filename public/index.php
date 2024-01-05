@@ -14,7 +14,6 @@
  * @package  App
  */
 
-
 // Autoload dependencies.
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -59,24 +58,33 @@ function initializeRouter(string $viewsPath): void
     $router = new App\Router($viewsPath);
 
     $router->get('/', 'HomeController') // Home page route.
-    ->get('/menu', 'MenuController') // Menu page route.
-    ->get('/registration', 'RegistrationController') // Registration page route.
-    ->get('/cart', 'CartController') // Cart page route.
-    ->post('/login', 'RegistrationController', 'login') // Login post route.
-    ->post('/signin', 'RegistrationController', 'signin') // signup post route.
-    ->get('/logout', 'RegistrationController', 'logout') // Logout route.
-    ->get('/admin', 'AdminController') // Admin page route.
-    ->get('/checkout', 'CheckoutController') // Checkout page route.
-    ->post('/checkoutSubmit', 'CheckoutController', 'checkout') // Checkout post route.
+        ->get('/menu', 'MenuController') // Menu page route.
+        ->get('/registration', 'RegistrationController') // Registration page route.
+        ->get('/cart', 'CartController') // Cart page route.
+        ->post('/login', 'RegistrationController', 'login') // Login post route.
+        ->post('/signin', 'RegistrationController', 'signin') // signup post route.
+        ->get('/logout', 'RegistrationController', 'logout') // Logout route.
+        ->get('/admin', 'AdminController') // Admin page route.
+        ->get('/checkout', 'CheckoutController') // Checkout page route.
+        ->post('/checkoutSubmit', 'CheckoutController', 'checkout') // Checkout post route.
+        ->get('/details', 'ProductController') // Product details page route.
+        ->get('/creation', 'CreationController') // Object creation page route.
+        ->post('/createObject', 'CreationController', 'createObject') // Object creation post route.
 
-    // API routes.
-    ->post('/api/verifyPassword', 'ApiController', 'verifyPassword')
-    ->post('/api/checkEmailExists', 'ApiController', 'checkEmailExists')
-    ->post('/api/addProductToCart', 'ApiController', 'addProductToCart')
-    ->post('/api/removeProductFromCart', 'ApiController', 'removeProductFromCart')
-    ->post('/api/updateProductQuantity', 'ApiController', 'updateProductQuantity')
-    ->post('/api/updatestockQuantity', 'ApiController', 'updatestockQuantity')
+        // API routes.
+        ->post('/api/verifyPassword', 'ApiController', 'verifyPassword') // Verify password route.
+        ->post('/api/checkEmailExists', 'ApiController', 'checkEmailExists') // Check email exists route.
+        ->post('/api/addProductToCart', 'ApiController', 'addProductToCart') // Add product to cart route.
+        ->post('/api/removeProductFromCart', 'ApiController', 'removeProductFromCart') // Remove product from cart route.
+        ->post('/api/updateProductQuantity', 'ApiController', 'updateProductQuantity') // Update product quantity route.
+        ->post('/api/updatestockQuantity', 'ApiController', 'updatestockQuantity') // Update stock quantity route.
+        ->post('/api/addCustomPizzaToCart', 'ApiController', 'addCustomPizzaToCart') // Add custom pizza to cart route.
+        ->post('/api/deleteItem', 'ApiController', 'deleteItem') // Delete item route.
+        ->post('/api/getTopProducts', 'ApiController', 'getTopProducts') // Get top products route.
+        ->post('/api/getSalesByMonth', 'ApiController', 'getSalesByMonth') // Get sales by month route.
+        ->post('/api/getPizzaStats', 'ApiController', 'getPizzaStats') // Get pizza stats route.
+        ->post('/api/updateSpotlight', 'ApiController', 'updateSpotlight') // Update spotlight route.
 
-    // Handle the request.
-    ->run();
+        // Handle the request.
+        ->run();
 }

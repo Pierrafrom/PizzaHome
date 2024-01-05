@@ -35,6 +35,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  const removeButtons = document.querySelectorAll(".btn-remove");
+  removeButtons.forEach((button) => {
+    button.addEventListener("click", handleRemoveButtonClick);
+  });
+
+  const spotlightsCheckboxes = document.querySelectorAll(".spotlight-checkbox");
+  spotlightsCheckboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", handleSpotlightCheckboxChange);
+  });
+
   // Add an event listener to the 'Confirm' button for updating the stock quantity
   const confirmButtons = document.querySelectorAll(".confirm-quantity");
   confirmButtons.forEach((confirmButton) => {
@@ -169,5 +179,98 @@ function showTab() {
   const tab = document.querySelector(hash + "-tab");
   if (tab) {
     tab.click();
+  }
+}
+
+/**
+ * Handles the click event of the 'Remove' button for a product.
+ *
+ * @param {Event} event - The click event.
+ */
+async function handleRemoveButtonClick(event) {
+  const productId = event.target.getAttribute("data-product-id");
+  const productType = event.target.getAttribute("data-product-type");
+  console.log(productId);
+  console.log(productType);
+
+  try {
+    const response = await fetch("/api/deleteItem", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productId: productId,
+        productType: productType,
+      }),
+    });
+
+    // Check the response status
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+      if (data.success) {
+        // Quantity updated successfully, you can update the stock view here
+        location.reload();
+      } else {
+        console.log(data);
+        showMessage("Failed to update stock quantity", CustomAlert.Type.ERROR);
+      }
+    } else {
+      console.log(response);
+      showMessage("Failed to update stock quantity", CustomAlert.Type.ERROR);
+    }
+  } catch (error) {
+    showMessage(
+      "An error occurred while updating stock quantity",
+      CustomAlert.Type.ERROR
+    );
+  }
+}
+
+/**
+ * Handles the change event of the 'Spotlight' checkbox for a product.
+ *
+ * @param {Event} event - The change event.
+ */
+async function handleSpotlightCheckboxChange(event) {
+  const productId = event.target.getAttribute("data-product-id");
+  const productType = event.target.getAttribute("data-product-type");
+
+  console.log(productId);
+  console.log(productType);
+
+  try {
+    const response = await fetch("/api/updateSpotlight", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productId: productId,
+        productType: productType,
+      }),
+    });
+
+    // Check the response status
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+      if (data.success) {
+        // Quantity updated successfully, you can update the stock view here
+        location.reload();
+      } else {
+        console.log(data);
+        showMessage("Failed to update stock quantity", CustomAlert.Type.ERROR);
+      }
+    } else {
+      console.log(response);
+      showMessage("Failed to update stock quantity", CustomAlert.Type.ERROR);
+    }
+  } catch (error) {
+    showMessage(
+      "An error occurred while updating stock quantity",
+      CustomAlert.Type.ERROR
+    );
   }
 }

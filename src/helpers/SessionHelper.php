@@ -57,13 +57,13 @@ class SessionHelper
      * @param int $userId The user's ID.
      * @return void This function does not return a value.
      */
-    public static function sessionConnect(int $userId): void
+    public static function sessionConnect(int $userId, bool $is_admin): void
     {
         self::initSession();
 
         if (!isset($_SESSION['cart'])) {
             session_regenerate_id(true);
-            $_SESSION['cart'] = array();
+            $_SESSION['cart'] = [];
         } else {
             $cart = $_SESSION['cart'];
             session_regenerate_id(true);
@@ -73,6 +73,11 @@ class SessionHelper
         // Set session variables to indicate the user is logged in
         $_SESSION['logged_in'] = true;
         $_SESSION['user_id'] = $userId;
+        if ($is_admin) {
+            $_SESSION['is_admin'] = true;
+        } else {
+            $_SESSION['is_admin'] = false;
+        }
     }
 
     /**
@@ -88,7 +93,7 @@ class SessionHelper
     {
         self::createSession();
 
-        $keys = ['logged_in', 'user_id', 'user_email', 'cart'];
+        $keys = ['logged_in', 'user_id', 'user_email', 'cart', 'is_admin'];
 
         foreach ($keys as $key) {
             if (!isset($_SESSION[$key])) {
@@ -149,5 +154,24 @@ class SessionHelper
         self::initSession();
 
         return $_SESSION[$key] ?? null;
+    }
+
+    /**
+     * Checks if a user is admin.
+     * 
+     * This method initializes the session if it is not already started
+     * and then checks if the user is admin.
+     * 
+     * @return bool True if the user is admin, false otherwise.
+     */
+    public static function is_admin(): bool
+    {
+        self::initSession();
+
+        if (!isset($_SESSION['is_admin'])) {
+            $_SESSION['is_admin'] = false;
+        }
+
+        return $_SESSION['is_admin'];
     }
 }

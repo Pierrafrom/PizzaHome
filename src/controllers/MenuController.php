@@ -7,6 +7,7 @@ use App\models\Dessert;
 use App\models\Pizza;
 use App\models\Soda;
 use App\models\Wine;
+use App\models\WineColor;
 use Exception;
 
 /**
@@ -59,8 +60,8 @@ class MenuController extends Controller
         try {
             $pizzas = Pizza::getAllPizzas();
             $sodas = Soda::getAllSodas();
-            $whiteWines = Wine::getAllWhiteWine();
-            $redWines = Wine::getAllRedWine();
+            $whiteWines = Wine::getWinesByColor(WineColor::WHITE);
+            $redWines = Wine::getWinesByColor(WineColor::RED);
             $cocktails = Cocktail::getAllCocktails();
             $desserts = Dessert::getAllDesserts();
 
@@ -98,16 +99,24 @@ class MenuController extends Controller
     public function getMenuSection(array $foods, string $productType): string
     {
         $output = '';
+        $detailsText = $productType == 'pizza' ? 'See Details or Customize' : 'See Details';
         try {
             foreach ($foods as $food) {
                 $output .= '<div class="tab-item">';
                 $output .= '<article>';
                 $output .= $food->displayInMenu();
+                $output .= '<a href="/details?id=' . $food->id . '&type=' . $productType . '" class="details-link">' . $detailsText .
+                    '<span> 
+                                    <img src="/img/icons/link-icon.svg" alt="arrow link icon">
+                                </span>
+                            </a>';
                 $output .= '</article>';
                 $output .= '<div class="menu-btns">';
                 $output .= '<div class="quantity-control">';
                 $output .= '<button class="btn-quantity btn-minus">-</button>';
-                $output .= '<span class="product-quantity" data-product-id="' . $food->id . '">1</span>';
+                $output .= '<span class="product-quantity" data-product-id="' 
+                            . $food->id . '" data-product-type="' 
+                            . $productType . '">0</span>';
                 $output .= '<button class="btn-quantity btn-plus">+</button>';
                 $output .= '</div>';
                 $output .= '<button class="add-to-cart" 

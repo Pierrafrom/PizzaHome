@@ -8,6 +8,7 @@ use App\models\Dessert;
 use App\models\Pizza;
 use App\models\Soda;
 use App\models\Wine;
+use App\models\PizzaCustom;
 use Exception;
 
 /**
@@ -197,6 +198,12 @@ class CartController extends Controller
                                 'quantity' => $product['quantity']
                             ];
                             break;
+                        case 'pizzaCustom':
+                            $cartWithObjects[$productType][$product['id']] = [
+                                'product' => PizzaCustom::getById($product['id']),
+                                'quantity' => $product['quantity']
+                            ];
+                            break;
                     }
                 }
             }
@@ -211,7 +218,15 @@ class CartController extends Controller
     }
 
     /**
-     * @throws Exception
+     * Calculates the total price of all items in the shopping cart.
+     * 
+     * This method retrieves the shopping cart from the session and iterates through each product type
+     * (e.g., pizza, soda, dessert, wine, cocktail, custom pizza) to calculate the total cost.
+     * The price for each product is obtained by fetching the product details using its respective model class.
+     * If the cart is empty or not set, the method returns zero.
+     * 
+     * @return float The total price of all items in the cart.
+     * @throws Exception If there's an error during price calculation, especially in a development environment.
      */
     private function getTotalPrice(): float
     {
@@ -239,10 +254,15 @@ class CartController extends Controller
                         case 'cocktail':
                             $totalPrice += Cocktail::getById($product['id'])->price * $product['quantity'];
                             break;
+                        case 'pizzaCustom':
+                            $totalPrice += PizzaCustom::getById($product['id'])->price * $product['quantity'];
+                            break;
                     }
                 }
             }
         } catch (Exception $e) {
+            // Throw an exception with a detailed message in development environment
+            // or a generic error message in other environments
             if ($_ENV['ENVIRONMENT'] == 'development') {
                 throw new Exception($e->getMessage());
             } else throw new Exception('An error occurred while retrieving the cart.');
@@ -385,11 +405,8 @@ class CartController extends Controller
     {
         $totalItems = 0;
 
-        // Vérifiez d'abord si le panier existe
         if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
-            // Parcourez chaque type de produit dans le panier
             foreach ($_SESSION['cart'] as $productType => $products) {
-                // Parcourez chaque produit et additionnez les quantités
                 foreach ($products as $product) {
                     $totalItems += $product['quantity'];
                 }

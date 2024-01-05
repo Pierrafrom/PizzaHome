@@ -5,12 +5,31 @@ namespace App\controllers;
 use App\helpers\DB_Helper;
 use Exception;
 use JetBrains\PhpStorm\NoReturn;
+use App\DB_Connection;
+use App\models\PizzaCustom;
 
 /**
- * ApiController class to handle API requests related to user authentication.
+ * ApiController class handles API requests for various functionalities like user authentication, 
+ * managing products in the shopping cart, and retrieving statistical data.
+ * 
+ * Methods included in this class:
+ * 
+ * - isPostRequest(): bool - Checks if the current request is a POST request.
+ * - sendResponse(mixed $data, int $statusCode = 200): void - Sends a JSON response with the given data and status code.
+ * - verifyPassword(): void - Verifies user password for authentication.
+ * - checkEmailExists(): void - Checks if an email exists in the database.
+ * - addProductToCart(): void - Adds a product to the shopping cart.
+ * - removeProductFromCart(): void - Removes a product from the shopping cart.
+ * - updateProductQuantity(): void - Updates the quantity of a product in the shopping cart.
+ * - updatestockQuantity(): void - Updates the stock quantity of a product.
+ * - addCustomPizzaToCart(): void - Adds a custom pizza to the shopping cart.
+ * - deleteItem(): void - Deletes an item from the database.
+ * - getTopProducts(): void - Retrieves the top-selling products for the last 30 days.
+ * - getSalesByMonth(): void - Fetches sales data grouped by month.
+ * - getPizzaStats(): void - Retrieves statistical data about pizzas.
+ * - updateSpotlight(): void - Updates the spotlight status of a specified product.
  *
- * This class includes methods for verifying user credentials and responding
- * accordingly. It's typically used for handling AJAX requests from the frontend.
+ * @package App\controllers
  */
 class ApiController
 {
@@ -59,7 +78,6 @@ class ApiController
         exit;
     }
 
-
     /**
      * Verifies user password.
      *
@@ -75,11 +93,22 @@ class ApiController
             $email = $postData['email'] ?? '';
             $password = $postData['password'] ?? '';
 
+            // check if the credentials are correct for a user
             try {
                 DB_Helper::verifyCredentials($email, $password);
                 $isCorrect = true;
             } catch (Exception) {
                 $isCorrect = false;
+            }
+
+            // check if the credentials are correct for an admin
+            if (!$isCorrect) {
+                try {
+                    DB_Helper::adminLogin($email, $password);
+                    $isCorrect = true;
+                } catch (Exception) {
+                    $isCorrect = false;
+                }
             }
 
             if ($isCorrect) {
@@ -89,7 +118,6 @@ class ApiController
             }
         }
     }
-
 
     /**
      * Checks if an email exists in the database.
@@ -244,7 +272,6 @@ class ApiController
         }
     }
 
-
     public function updatestockQuantity(): void
     {
         // Check if the current request is a POST request
@@ -272,6 +299,170 @@ class ApiController
             } else {
                 // Send an error response if product ID, type, or new quantity is missing or invalid
                 $this->sendResponse(['success' => false, 'message' => 'Invalid product information or quantity.']);
+            }
+        }
+    }
+
+    /**
+     * Adds a custom pizza to the shopping cart.
+     * Validates the request, processes the custom pizza creation, and adds it to the cart.
+     * It checks for the number of ingredients to remove/add and validates the supplement IDs.
+     *
+     * @return void Outputs a JSON response with the result of the operation.
+     */
+    public function addCustomPizzaToCart(): void
+    {
+        // Check if the current request is a POST request
+        if ($this->isPostRequest()) {
+
+            $jsonRequestBody = file_get_contents('php://input');
+            $requestData = json_decode($jsonRequestBody, true);
+
+            $productId = $requestData['productId'] ?? 'null';
+            $ingredientsToRemove = $requestData['ingredientsToRemove'] ?? [];
+            $supplementsToAdd = $requestData['supplementsToAdd'] ?? [];
+            $productQuantity = $requestData['productQuantity'] ?? 'null';
+
+            if (count($ingredientsToRemove) > 3) {
+                $this->sendResponse(['success' => false, 'message' => 'You cannot remove more than 3 ingredients.']);
+            }
+
+            if (count($supplementsToAdd) > 3) {
+                $this->sendResponse(['success' => false, 'message' => 'You cannot add more than 3 supplements.']);
+            }
+
+            foreach ($supplementsToAdd as $supplement) {
+                if (!($supplement == 7 || $supplement == 17 || $supplement == 2)) {
+                    $this->sendResponse(['success' => false, 'message' => 'Invalid supplement.']);
+                }
+            }
+
+            if (!isset($productQuantity) || $productQuantity < 1) {
+                $this->sendResponse(['success' => false, 'message' => 'Invalid product quantity']);
+            }
+
+            if ($productId !== null) {
+                try {
+                    $params = [
+                        'p_originalPizzaId' => $productId,
+                        'p_addedIngredient1' => $supplementsToAdd[0] ?? null,
+                        'p_addedIngredient2' => $supplementsToAdd[1] ?? null,
+                        'p_addedIngredient3' => $supplementsToAdd[2] ?? null,
+                        'p_removedIngredient1' => $ingredientsToRemove[0] ?? null,
+                        'p_removedIngredient2' => $ingredientsToRemove[1] ?? null,
+                        'p_removedIngredient3' => $ingredientsToRemove[2] ?? null
+                    ];
+                    $customPizzaId = -1;
+                    $outParams = ['p_customPizzaId' => &$customPizzaId];
+
+                    DB_Connection::callProcedure('CreateCustomPizza', $params, $outParams);
+                    $result = CartController::addProductToCart($customPizzaId, 'pizzaCustom', $productQuantity);
+                    $this->sendResponse(['success' => $result]);
+                } catch (Exception $e) {
+                    $this->sendResponse(['success' => false, 'message' => $e->getMessage()]);
+                }
+            } else {
+                $this->sendResponse(['success' => false, 'message' => 'Invalid product id.']);
+            }
+        }
+    }
+
+    /**
+     * Deletes an item from the database.
+     * This method reads the product ID and type from the request and attempts to delete the item.
+     *
+     * @return void Outputs a JSON response with the result of the delete operation.
+     */
+    public function deleteItem(): void
+    {
+        if ($this->isPostRequest()) {
+
+            $jsonRequestBody = file_get_contents('php://input');
+            $requestData = json_decode($jsonRequestBody, true);
+
+            $productId = $requestData['productId'] ?? 'null';
+            $productType = $requestData['productType'] ?? 'null';
+
+            if ($productId !== null && $productType !== null) {
+                try {
+                    $result = AdminController::deleteObject($productId, $productType);
+                    $this->sendResponse(['success' => $result]);
+                } catch (Exception $e) {
+                    $this->sendResponse(['success' => false, 'message' => $e->getMessage()]);
+                }
+            } else {
+                $this->sendResponse(['success' => false, 'message' => 'Invalid product id or type.']);
+            }
+        }
+    }
+
+    /**
+     * Retrieves the top-selling products for the last 30 days.
+     * This method queries the database and returns a list of top-selling products.
+     *
+     * @return void Outputs a JSON response with the list of top products.
+     */
+    public function getTopProducts(): void
+    {
+        if ($this->isPostRequest()) {
+            $topProducts = DB_Helper::getTopProductsLast30Days();
+            $this->sendResponse(['success' => true, 'topProducts' => $topProducts]);
+        }
+    }
+
+    /**
+     * Fetches sales data grouped by month.
+     * This method queries the database for sales data and returns it categorized by month.
+     *
+     * @return void Outputs a JSON response with sales data by month.
+     */
+    public function getSalesByMonth(): void
+    {
+        if ($this->isPostRequest()) {
+            $salesByMonth = DB_Helper::getSalesByMonth();
+            $this->sendResponse(['success' => true, 'salesByMonth' => $salesByMonth]);
+        }
+    }
+
+    /**
+     * Retrieves statistical data about pizzas.
+     * This method queries the database for pizza statistics and returns the data.
+     *
+     * @return void Outputs a JSON response with pizza statistics.
+     */
+    public function getPizzaStats(): void
+    {
+        if ($this->isPostRequest()) {
+            $pizzaStats = DB_Helper::getPizzaStats();
+            $this->sendResponse(['success' => true, 'pizzaStats' => $pizzaStats]);
+        }
+    }
+
+    /**
+     * Updates the spotlight status of a specified product.
+     * Reads the product ID, type, and new spotlight status from the request and updates the database.
+     *
+     * @return void Outputs a JSON response with the result of the update operation.
+     */
+    public function updateSpotlight(): void
+    {
+        if ($this->isPostRequest()) {
+            $jsonRequestBody = file_get_contents('php://input');
+            $requestData = json_decode($jsonRequestBody, true);
+
+            $productId = $requestData['productId'] ?? 'null';
+            $productType = $requestData['productType'] ?? 'null';
+            $isSpotlight = $requestData['isSpotlight'] ?? 'null';
+
+            if ($productId !== null && $productType !== null && $isSpotlight !== null) {
+                try {
+                    $result = AdminController::updateSpotlight($productId, $productType, $isSpotlight);
+                    $this->sendResponse(['success' => $result]);
+                } catch (Exception $e) {
+                    $this->sendResponse(['success' => false, 'message' => $e->getMessage()]);
+                }
+            } else {
+                $this->sendResponse(['success' => false, 'message' => 'Invalid product id or type.']);
             }
         }
     }

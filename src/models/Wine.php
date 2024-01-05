@@ -51,32 +51,32 @@ class Wine extends Food
     /**
      * @var float price of a glass of the wine.
      */
-    private float $glassPrice;
+    private ?float $glassPrice = null;
 
     /**
      * @var string domain of the wine.
      */
-    private string $domain;
+    private ?string $domain = null;
 
     /**
      * @var string grape variety of the wine.
      */
-    private string $grapeVariety;
+    private ?string $grapeVariety = null;
 
     /**
      * @var string origin of the wine.
      */
-    private string $origin;
+    private ?string $origin = null;
 
     /**
      * @var float alcohol percentage of the wine.
      */
-    private float $alcoholPercentage;
+    private ?float $alcoholPercentage = null;
 
     /**
      * @var int year of the wine.
      */
-    private int $year;
+    private ?int $year = null;
 
     /**
      * @var string color of the wine.
@@ -86,6 +86,19 @@ class Wine extends Food
     private int $stock;
 
     private string $bottleType;
+
+    public static $formFields = [
+        'name' => ['type' => 'text', 'placeholder' => 'Name of the Wine', 'required' => true],
+        'price' => ['type' => 'number', 'placeholder' => 'Bottle Price', 'required' => true],
+        'glassPrice' => ['type' => 'number', 'placeholder' => 'Price per Glass', 'required' => false],
+        'domain' => ['type' => 'text', 'placeholder' => 'Domain', 'required' => false],
+        'grapeVariety' => ['type' => 'text', 'placeholder' => 'Grape Variety', 'required' => false],
+        'origin' => ['type' => 'text', 'placeholder' => 'Origin', 'required' => false],
+        'alcoholPercentage' => ['type' => 'number', 'placeholder' => 'Alcohol Percentage', 'required' => false],
+        'year' => ['type' => 'number', 'placeholder' => 'Year', 'required' => true],
+        'spotlight' => ['type' => 'checkbox', 'required' => true],
+        'stock' => ['type' => 'number', 'placeholder' => 'Stock Quantity', 'required' => true]
+    ];
 
     /**
      * Constructor for the Wine class. Initializes a new Wine object with specified attributes.
@@ -111,20 +124,21 @@ class Wine extends Food
      *
      * Note: This constructor throws InvalidArgumentException if an invalid wine color is provided.
      */
-    public function __construct(?int    $id = null,
-                                ?string $name = null,
-                                ?float  $price = null,
-                                ?bool   $spotlight = null,
-                                ?float  $glassPrice = null,
-                                ?string $domain = null,
-                                ?string $grapeVariety = null,
-                                ?string $origin = null,
-                                ?float  $alcoholPercentage = null,
-                                ?int    $year = null,
-                                ?string $color = null,
-                                ?int    $stock = null,
-                                ?string $bottleType = null)
-    {
+    public function __construct(
+        ?int    $id = null,
+        ?string $name = null,
+        ?float  $price = null,
+        ?bool   $spotlight = null,
+        ?float  $glassPrice = null,
+        ?string $domain = null,
+        ?string $grapeVariety = null,
+        ?string $origin = null,
+        ?float  $alcoholPercentage = null,
+        ?int    $year = null,
+        ?string $color = null,
+        ?int    $stock = null,
+        ?string $bottleType = null
+    ) {
         if (!is_null($id)) {
             if (!is_null($color) && !in_array($color, WineColor::cases())) {
                 throw new InvalidArgumentException("Color should be 'RED', 'WHITE' or 'ROSE'.");
@@ -241,21 +255,19 @@ class Wine extends Food
     }
 
     /**
-     * Retrieves all wine entries from the database.
-     * This static method executes a SQL query to fetch all wine records from the VIEW_WINE view.
-     * It returns an array of Wine objects or a single Wine object if only one record is found.
-     *
-     * @return object|array An array of Wine objects or a single Wine object if only one record is found.
+     * Retrieves wine entries from the database based on the specified color.
+     * If no color is specified, it fetches all wine records.
+     * 
+     * @param WineColor|null $color The color of the wine to filter by, or null to fetch all wines.
+     * @return object|array An array of Wine objects, or a single Wine object if only one record is found.
      *
      * Example Usage:
      * ```
-     * $allWines = Wine::getAllWine();
-     * foreach ($allWines as $wine) {
-     *     // Process each wine
-     * }
+     * $redWines = Wine::getWinesByColor(WineColor::RED);
+     * $allWines = Wine::getWinesByColor(null); // Gets all wines
      * ```
      */
-    public static function getAllWine(): object|array
+    public static function getWinesByColor(?WineColor $color = null): object|array
     {
         $sql = "SELECT id,
                        name, 
@@ -270,136 +282,16 @@ class Wine extends Food
                        color,
                        stock,
                        bottleType
-                    FROM VIEW_WINE";
+                FROM VIEW_WINE";
 
-        $wines = DB_Connection::query($sql, [], self::class);
-
-        if (is_object($wines)) {
-            return [$wines];
+        // Add a WHERE clause if a specific wine color is requested
+        if ($color !== null) {
+            $sql .= " WHERE color = '{$color->value}'";
         }
 
-        return $wines;
-    }
-
-    /**
-     * Retrieves all white wine entries from the database.
-     * Similar to getAllWine(), but specifically filters for wines with the color set to 'WHITE'.
-     * Returns an array of Wine objects or a single Wine object for white wines.
-     *
-     * @return object|array An array of Wine objects or a single Wine object if only one white wine record is found.
-     *
-     * Example Usage:
-     * ```
-     * $whiteWines = Wine::getAllWhiteWine();
-     * foreach ($whiteWines as $wine) {
-     *     // Process each white wine
-     * }
-     * ```
-     */
-    public static function getAllWhiteWine(): object|array
-    {
-        $sql = "SELECT id,
-                       name, 
-                       price,
-                       spotlight,
-                       glassPrice, 
-                       domain, 
-                       grapeVariety,
-                       origin, 
-                       alcoholPercentage, 
-                       year,
-                       color,
-                       stock,
-                       bottleType
-                    FROM VIEW_WINE
-                    WHERE color = 'WHITE'";
-
         $wines = DB_Connection::query($sql, [], self::class);
 
-        if (is_object($wines)) {
-            return [$wines];
-        }
-
-        return $wines;
-    }
-
-    /**
-     * Retrieves all red wine entries from the database.
-     * Functions similarly to getAllWine(), but filters the results to include only wines with the color 'RED'.
-     * Returns an array of Wine objects or a single Wine object for red wines.
-     *
-     * @return object|array An array of Wine objects or a single Wine object if only one red wine record is found.
-     *
-     * Example Usage:
-     * ```
-     * $redWines = Wine::getAllRedWine();
-     * foreach ($redWines as $wine) {
-     *     // Process each red wine
-     * }
-     * ```
-     */
-    public static function getAllRedWine(): object|array
-    {
-        $sql = "SELECT id,
-                       name, 
-                       price,
-                       spotlight,
-                       glassPrice, 
-                       domain, 
-                       grapeVariety,
-                       origin, 
-                       alcoholPercentage, 
-                       year,
-                       color,
-                       stock,
-                       bottleType
-                    FROM VIEW_WINE
-                    WHERE color = 'RED'";
-
-        $wines = DB_Connection::query($sql, [], self::class);
-
-        if (is_object($wines)) {
-            return [$wines];
-        }
-
-        return $wines;
-    }
-
-    /**
-     * Retrieves all rosé wine entries from the database.
-     * This method is tailored to select only wines with the color 'ROSE'.
-     * It returns an array of Wine objects or a single Wine object for rosé wines.
-     *
-     * @return object|array An array of Wine objects or a single Wine object if only one rosé wine record is found.
-     *
-     * Example Usage:
-     * ```
-     * $roseWines = Wine::getAllRoseWine();
-     * foreach ($roseWines as $wine) {
-     *     // Process each rosé wine
-     * }
-     * ```
-     */
-    public static function getAllRoseWine(): object|array
-    {
-        $sql = "SELECT id,
-                       name, 
-                       price,
-                       spotlight,
-                       glassPrice, 
-                       domain, 
-                       grapeVariety,
-                       origin, 
-                       alcoholPercentage, 
-                       year,
-                       color,
-                       stock,
-                       bottleType
-                    FROM VIEW_WINE
-                    WHERE color = 'ROSE'";
-
-        $wines = DB_Connection::query($sql, [], self::class);
-
+        // Return an array with a single Wine object if only one record is found
         if (is_object($wines)) {
             return [$wines];
         }
@@ -444,24 +336,6 @@ class Wine extends Food
     }
 
     /**
-     * Constructs a lowercase, URL-friendly version of the wine's name.
-     *
-     * This method takes the wine's name, replaces all spaces with hyphens,
-     * and converts the entire string to lowercase. This is useful for creating
-     * clean, readable URLs or file names that require lowercase characters
-     * and no spaces.
-     *
-     * @return string The wine's name in lowercase with spaces replaced by hyphens.
-     */
-    public function getImageName(): string
-    {
-        // First, remove all content within parentheses, including the parentheses themselves
-        $nameWithoutParentheses = preg_replace('/\s*\([^)]*\)/', '', $this->name);
-        // Then replace spaces with hyphens and convert to lowercase
-        return strtolower(str_replace(' ', '-', $nameWithoutParentheses));
-    }
-
-    /**
      * Retrieves a description of the wine.
      *
      * This method returns a string that describes the wine, including its color, origin, grape variety,
@@ -472,7 +346,14 @@ class Wine extends Food
      */
     public function getDescription(): string
     {
-        return '<p>This wine is a ' . strtolower($this->color) . ' wine from ' . $this->origin . '</p>';
+        return '<p>' . ucfirst(strtolower($this->color)) . ' wine from ' . $this->domain . '(' . $this->origin . ')</p>';
+    }
+
+    public function getLongDescription(): string
+    {
+        return "This {$this->color} wine, named '{$this->domain}', is a fine example of {$this->grapeVariety} from {$this->origin}. "
+            . "Produced in the year {$this->year}, it boasts an alcohol content of {$this->alcoholPercentage}%. "
+            . "It's a delightful choice with a stock of {$this->stock} bottles currently available.";
     }
 
     /**
@@ -538,4 +419,31 @@ class Wine extends Food
         return $wines;
     }
 
+    public static function generateSpecificSection()
+    {
+        $bottleTypes = ['BOTTLE', 'PICCOLO', 'MAGNUM', 'JEROBOAM', 'REHOBOAM', 'MATHUSALEM'];
+        $color = ['RED', 'WHITE', 'ROSE'];
+
+        $html = '<div class="form-group">';
+        $html .= '<label for="color">Color</label>';
+        $html .= '<select id="color" name="color">';
+        foreach ($color as $c) {
+            $html .= '<option value="' . htmlspecialchars($c) . '">' . htmlspecialchars(ucfirst(strtolower($c))) . '</option>';
+        }
+        $html .= '</select>';
+        $html .= '</div>';
+
+        $html .= '<div class="form-group">';
+        $html .= '<label for="bottleType">Type de Bouteille</label>';
+        $html .= '<select id="bottleType" name="bottleType">';
+
+        foreach ($bottleTypes as $type) {
+            $html .= '<option value="' . htmlspecialchars($type) . '">' . htmlspecialchars(ucfirst(strtolower($type))) . '</option>';
+        }
+
+        $html .= '</select>';
+        $html .= '</div>';
+
+        return $html;
+    }
 }

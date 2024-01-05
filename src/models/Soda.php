@@ -20,6 +20,13 @@ class Soda extends Food
 
     public string $bottleType;
 
+    public static $formFields = [
+        'name' => ['type' => 'text', 'placeholder' => 'Name of the Soda', 'required' => true],
+        'price' => ['type' => 'number', 'placeholder' => 'Price', 'required' => true],
+        'spotlight' => ['type' => 'checkbox', 'required' => true],
+        'stock' => ['type' => 'number', 'placeholder' => 'Stock Quantity', 'required' => true]
+    ];
+
     /**
      * Constructs a new Soda instance.
      *
@@ -28,13 +35,14 @@ class Soda extends Food
      * @param float|null $price The price of the soda. Defaults to 4.0 if not provided.
      * @param bool|null $spotlight Indicates if the soda is a featured item. Defaults to false if not provided.
      */
-    public function __construct(?int $id = null,
-                                ?string $name = null,
-                                ?float $price = null,
-                                ?bool $spotlight = null,
-                                ?int $stock = null,
-                                ?string $bottleType = null)
-    {
+    public function __construct(
+        ?int $id = null,
+        ?string $name = null,
+        ?float $price = null,
+        ?bool $spotlight = null,
+        ?int $stock = null,
+        ?string $bottleType = null
+    ) {
         if (!is_null($id)) {
             $this->id = self::$autoIncrementId++;
             $this->name = $name ?? 'My Soda';
@@ -98,24 +106,6 @@ class Soda extends Food
     }
 
     /**
-     * Constructs a lowercase, URL-friendly version of the soda's name.
-     *
-     * This method takes the soda's name, replaces all spaces with hyphens,
-     * and converts the entire string to lowercase. This is useful for creating
-     * clean, readable URLs or file names that require lowercase characters
-     * and no spaces.
-     *
-     * @return string The soda's name in lowercase with spaces replaced by hyphens.
-     */
-    public function getImageName(): string
-    {
-        // First, remove all content within parentheses, including the parentheses themselves
-        $nameWithoutParentheses = preg_replace('/\s*\([^)]*\)/', '', $this->name);
-        // Then replace spaces with hyphens and convert to lowercase
-        return strtolower(str_replace(' ', '-', $nameWithoutParentheses));
-    }
-
-    /**
      * Retrieves a Soda instance from the database by its ID.
      *
      * @param int $id The ID of the soda to retrieve.
@@ -151,4 +141,21 @@ class Soda extends Food
         return $sodas;
     }
 
+    public static function generateSpecificSection()
+    {
+        $bottleTypes = ['BOTTLE', 'CAN'];
+
+        $html = '<div class="form-group">';
+        $html .= '<label for="bottleType">Type de Bouteille</label>';
+        $html .= '<select id="bottleType" name="bottleType">';
+
+        foreach ($bottleTypes as $type) {
+            $html .= '<option value="' . htmlspecialchars($type) . '">' . htmlspecialchars(ucfirst(strtolower($type))) . '</option>';
+        }
+
+        $html .= '</select>';
+        $html .= '</div>';
+
+        return $html;
+    }
 }

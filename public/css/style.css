@@ -185,6 +185,11 @@ section {
   border-color: var(--warning);
 }
 
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 /*header*/
 nav {
   display: flex;

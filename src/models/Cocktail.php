@@ -21,12 +21,19 @@ class Cocktail extends Food
     /**
      * @var array An array of ingredients included in the cocktail item.
      */
-    private array $ingredients = [];
+    protected array $ingredients = [];
 
     /**
      * @var float alcohol percentage of the cocktail.
      */
     private float $alcoholPercentage;
+
+    public static $formFields = [
+        'name' => ['type' => 'text', 'placeholder' => 'Cocktail Name', 'required' => true],
+        'price' => ['type' => 'number', 'placeholder' => 'Price', 'required' => true],
+        'spotlight' => ['type' => 'checkbox', 'required' => false],
+        'alcoholPercentage' => ['type' => 'number', 'placeholder' => 'Alcohol Percentage', 'required' => false]
+    ];
 
     /**
      * Constructor for the Cocktail class.
@@ -47,13 +54,14 @@ class Cocktail extends Food
      * // To manually create a new cocktail without loading from the database:
      * $newCocktail = new Cocktail(null, "Margarita", 7.99, true, [['name' => 'Tomato', 'isAllergen' => false]]);
      */
-    public function __construct(?int    $id = null,
-                                ?string $name = null,
-                                ?float  $price = null,
-                                ?bool   $spotlight = null,
-                                ?array  $ingredients = null,
-                                ?float  $alcoholPercentage = null)
-    {
+    public function __construct(
+        ?int    $id = null,
+        ?string $name = null,
+        ?float  $price = null,
+        ?bool   $spotlight = null,
+        ?array  $ingredients = null,
+        ?float  $alcoholPercentage = null
+    ) {
         // If the ID is provided, load the cocktail details from the database.
         if (!is_null($id)) {
             $this->loadFromDatabaseById($id);
@@ -114,16 +122,14 @@ class Cocktail extends Food
     private function loadIngredients(): void
     {
         // Execute a query to get the specific cocktail's ingredients.
-        $sql = "SELECT ingredientName, isAllergen FROM VIEW_COCKTAIL_INGREDIENTS WHERE id = :id";
-        $ingredients = DB_Connection::query($sql, ['id' => $this->id]);
-
-        // Populate the Cocktail object's ingredients array.
-        foreach ($ingredients as $ingredient) {
-            $this->ingredients[] = [
-                'name' => $ingredient['ingredientName'],
-                'isAllergen' => (bool)$ingredient['isAllergen'],
-            ];
-        }
+        $sql = "SELECT *
+                FROM VIEW_INGREDIENT vi
+                WHERE vi.id IN (
+                    SELECT vc.ingredientId
+                    FROM VIEW_COCKTAIL_INGREDIENTS vc
+                    WHERE vc.id = :id
+                )";
+        $this->ingredients = DB_Connection::query($sql, ['id' => $this->id], Ingredient::class);
     }
 
     /**
@@ -176,45 +182,6 @@ class Cocktail extends Food
     }
 
     /**
-     * Generates a string containing a comma-separated list of ingredient names
-     * for the cocktail, enclosed within a paragraph HTML element.
-     *
-     * The method maps over the `$ingredients` array property, extracting the
-     * 'name' of each ingredient. It then concatenates these names into a
-     * single string separated by commas. The resultant string is sanitized
-     * using `htmlspecialchars()` to prevent XSS attacks when displayed in HTML.
-     *
-     * @return string Returns a string of ingredient names wrapped in a paragraph tag.
-     *                The special characters in the ingredient names are converted to HTML entities.
-     */
-    public function getDescription(): string
-    {
-        $ingredientNames = array_map(function ($ingredient) {
-            return $ingredient['name'];
-        }, $this->ingredients);
-
-        return '<p>' . htmlspecialchars(implode(', ', $ingredientNames)) . '</p>';
-    }
-
-    /**
-     * Constructs a lowercase, URL-friendly version of the cocktail's name.
-     *
-     * This method takes the cocktail's name, replaces all spaces with hyphens,
-     * and converts the entire string to lowercase. This is useful for creating
-     * clean, readable URLs or file names that require lowercase characters
-     * and no spaces.
-     *
-     * @return string The cocktail's name in lowercase with spaces replaced by hyphens.
-     */
-    public function getImageName(): string
-    {
-        // First, remove all content within parentheses, including the parentheses themselves
-        $nameWithoutParentheses = preg_replace('/\s*\([^)]*\)/', '', $this->name);
-        // Then replace spaces with hyphens and convert to lowercase
-        return strtolower(str_replace(' ', '-', $nameWithoutParentheses));
-    }
-
-    /**
      * Displays cocktail information formatted for a menu.
      *
      * This function generates a string that includes the cocktail's name,
@@ -237,22 +204,8 @@ class Cocktail extends Food
         // Initialize the output with the cocktail name wrapped in <h3> tags.
         $output = '<h4>' . htmlspecialchars($this->name) . '</h4>';
 
-        // Create a string for the ingredients, separated by commas.
-        $ingredientsList = [];
-        foreach ($this->ingredients as $ingredient) {
-            // Escaping the ingredient name to prevent XSS attacks.
-            $ingredientName = htmlspecialchars($ingredient['name']);
-            // If the ingredient is an allergen, style it with red color and a red asterisk.
-            if ($ingredient['isAllergen']) {
-                $ingredientsList[] = '<span style="color: var(--secondary);">' . $ingredientName . ' *</span>';
-            } else {
-                // If it's not an allergen, just append the ingredient name.
-                $ingredientsList[] = $ingredientName;
-            }
-        }
-
         // Join all the ingredients with a comma and wrap them in <i> tags for styling.
-        $output .= '<p><i>' . implode(', ', $ingredientsList) . '</i></p>';
+        $output .= '<p><i>' . implode(', ', $this->ingredients) . '</i></p>';
 
         // Append the price information, formatted with the euro sign and strong tags for emphasis.
         $output .= '<p><strong>€' . htmlspecialchars($this->price) . '</strong></p>';

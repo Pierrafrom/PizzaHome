@@ -208,8 +208,11 @@ abstract class Controller
                     <div><img id='avatar-img' src='/img/avatar.png' alt='User-avatar'></div>
                     <ul id='user-dropdown' class='hide'>
                         <li><a href='#'>Order History</a></li>
-                        <li><a href='#'>Profile</a></li>
-                        <li>
+                        <li><a href='#'>Profile</a></li>";
+            if (SessionHelper::is_admin()) {
+                $menu .= "<li><a href='/admin'>Admin</a></li>";
+            }
+            $menu .= "<li>
                             <hr>
                         </li>
                         <li><a href='/logout?redirect=" . urlencode($_SERVER['REQUEST_URI']) . "' 

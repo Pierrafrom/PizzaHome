@@ -1,0 +1,256 @@
+@charset "UTF-8";
+/* CSS Document */
+
+.product-container {
+  width: 100%;
+  max-width: 960px;
+  margin: 62px auto 0 auto;
+  padding: 0 10px;
+  display: flex;
+}
+
+.product-container aside {
+  width: 66.6666666667%;
+  padding: 0 10px;
+}
+
+.product-container aside img {
+  width: 100%;
+  height: auto;
+}
+
+.product-details {
+  width: 33.3333333333%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.product-details h1 {
+  font-size: 3rem;
+  margin: 0;
+  color: var(--primary);
+  padding-bottom: 10px;
+}
+
+.quantity-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 0;
+}
+
+.quantity-control {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 5px;
+}
+
+.btn-primary {
+  margin: 5px;
+}
+
+.btn-quantity {
+  padding: 5px 10px;
+  border: none;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 700;
+  height: 30px;
+}
+
+.btn-minus {
+  background-color: var(--primary);
+  border-radius: 5px 0 0 5px;
+}
+
+.btn-plus {
+  background-color: var(--secondary);
+  border-radius: 0 5px 5px 0;
+}
+
+.product-quantity {
+  font-family: "Barlow", sans-serif;
+  font-weight: 400;
+  color: var(--text);
+  padding: 5px 10px;
+  border-top: solid 1px var(--glass);
+  border-bottom: solid 1px var(--glass);
+  box-sizing: border-box;
+  height: 30px;
+}
+
+.ingredient-list {
+  width: 100%;
+  margin: 0;
+  padding: 10px 0;
+  list-style: none;
+}
+
+.ingredient-list li {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  align-items: center;
+  padding: 5px 10px;
+  border-bottom: solid 1px var(--glass);
+  box-sizing: border-box;
+}
+
+.ingredient-name {
+  font-size: 1rem;
+  color: var(--text);
+  font-family: "Barlow", sans-serif;
+  font-weight: 400;
+  transition: text-decoration 0.3s ease;
+}
+
+.ingredient-list li:last-child {
+  border-bottom: none;
+}
+
+.ingredient label {
+  background-color: var(--secondary);
+  color: white;
+  padding: 5px 5px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.hide:checked + label + .ingredient-name {
+  text-decoration: line-through;
+}
+
+.cross {
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.supplements {
+  border-radius: 8px;
+  width: 100%;
+  padding: 10px 0;
+}
+
+.supplements h3 {
+  margin-top: 0;
+  color: var(--text);
+}
+
+.supplements label {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text);
+  padding: 5px 10px;
+  font-family: "Barlow", sans-serif;
+  display: flex;
+  width: 50%;
+  border-bottom: solid 1px var(--glass);
+  position: relative;
+}
+
+.supplements input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background-clip: content-box;
+  border: 1px solid var(--glass);
+  background-color: var(--glass);
+  border-radius: 3px;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.supplements input[type="checkbox"]:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+@media screen and (min-width: 769px) {
+  .supplements input[type="checkbox"]:checked:after {
+    content: "✔";
+    color: white;
+    font-size: 16px;
+    position: absolute;
+    left: 14px;
+    top: 4px;
+  }
+}
+
+.ingredient-list p,
+.supplements p {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text);
+  padding: 5px 10px;
+  font-family: "Barlow", sans-serif;
+}
+
+@media screen and (hover: hover) {
+  .btn-minus:hover {
+    background-color: var(--primary-hover);
+    cursor: pointer;
+  }
+
+  .btn-plus:hover {
+    background-color: var(--secondary-hover);
+    cursor: pointer;
+  }
+}
+
+@media screen and (hover: none) {
+  .btn-minus:active {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    color: var(--text-hover);
+  }
+
+  .btn-plus:active {
+    background-color: var(--secondary-hover);
+    border-color: var(--secondary-hover);
+    color: var(--text-hover);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .product-container {
+    flex-direction: column;
+  }
+
+  .product-container aside {
+    width: 100%;
+  }
+
+  .product-details {
+    width: 100%;
+  }
+
+  .supplements label {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+  }
+
+  .supplements input[type="checkbox"]:checked:after {
+    content: "✔";
+    color: white;
+    font-size: 16px;
+    position: absolute;
+    right: 24px;
+    top: 4px;
+  }
+}

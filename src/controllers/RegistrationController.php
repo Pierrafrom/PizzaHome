@@ -42,7 +42,7 @@ class RegistrationController extends Controller
         parent::__construct($viewPath); // Call the parent constructor for basic setup
         self::$title = "Registration"; // Set the title specific to the registration and login pages
         self::$cssFiles = ["form.css"]; // Define CSS files for page styling
-        self::$scriptFiles = ["tabs.js"]; // Include JavaScript files for tab functionality
+        self::$scriptFiles = ["tabs.js", "form.js"]; // Include JavaScript files for tab functionality
         self::$moduleFiles = ["registration.js"]; // Include JavaScript modules for registration and login processes
     }
 
@@ -73,6 +73,7 @@ class RegistrationController extends Controller
         }
 
         try {
+            // Verify the user's credentials
             $id = DB_Helper::verifyCredentials($email, $password);
 
             // update last login date
@@ -81,14 +82,21 @@ class RegistrationController extends Controller
             DB_Connection::callProcedure($procedureName, $params);
 
             // Connect the user to a session
-            SessionHelper::sessionConnect($id);
+            SessionHelper::sessionConnect($id, false);
 
             // Redirect to the home page or the requested redirect page if it's valid
             URL::redirect($_POST['redirect'] ?? '/');
+        } catch (Exception $e) {
+            try {
+                // Verify the admin's credentials
+                $id = DB_Helper::adminLogin($email, $password);
 
-        } catch (PDOException $e) {
-            // Handle database-related exceptions
-            throw new Exception("Database error: " . $e->getMessage());
+                SessionHelper::sessionConnect($id, true);
+                URL::redirect($_POST['redirect'] ?? '/');
+            } catch (Exception $e) {
+                // throw an exception if authentication fails for user and admin
+                throw new Exception($e->getMessage());
+            }
         }
     }
 
@@ -197,7 +205,6 @@ class RegistrationController extends Controller
 
             // Redirect to the home page or the requested redirect page if valid
             URL::redirect($_POST['redirect'] ?? '/');
-
         } catch (PDOException $e) {
             // Handle database-related exceptions
             throw new Exception("Database error: " . $e->getMessage());
