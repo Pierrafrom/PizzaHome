@@ -1,7 +1,6 @@
 # PizzaHome
 
 [![PHP](https://img.shields.io/badge/PHP-MVC-777BB4?logo=php&logoColor=white)](composer.json)
-[![Live demo](https://img.shields.io/badge/demo-online-brightgreen)](https://iut2orsaybestpizza.duckdns.org/)
 
 The customer-facing ordering website of a 3-app pizzeria system built as a
 university group project: order here as a customer, kitchen staff process
@@ -9,8 +8,9 @@ the order in
 [PizzaMakerApp](https://github.com/Pierrafrom/PizzaMakerApp), and
 [PizzaDeliveryApp](https://github.com/Pierrafrom/PizzaDeliveryApp)
 optimizes who delivers it and by what route — all three share the same
-database, [PizzeriaDB](https://github.com/Pierrafrom/PizzeriaDB). Live demo:
-[iut2orsaybestpizza.duckdns.org](https://iut2orsaybestpizza.duckdns.org/).
+database, [PizzeriaDB](https://github.com/Pierrafrom/PizzeriaDB). The
+university-hosted demo instance is no longer online; see
+[Setup](#setup) to run it locally.
 
 Built with Samuel Boix-Segura.
 
