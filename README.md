@@ -8,9 +8,7 @@ the order in
 [PizzaMakerApp](https://github.com/Pierrafrom/PizzaMakerApp), and
 [PizzaDeliveryApp](https://github.com/Pierrafrom/PizzaDeliveryApp)
 optimizes who delivers it and by what route — all three share the same
-database, [PizzeriaDB](https://github.com/Pierrafrom/PizzeriaDB). The
-university-hosted demo instance is no longer online; see
-[Setup](#setup) to run it locally.
+database, [PizzeriaDB](https://github.com/Pierrafrom/PizzeriaDB).
 
 Built with Samuel Boix-Segura.
 
