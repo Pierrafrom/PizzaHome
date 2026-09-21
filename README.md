@@ -13,6 +13,14 @@ database, [PizzeriaDB](https://github.com/Pierrafrom/PizzeriaDB).
 
 Built with Samuel Boix-Segura.
 
+## Screenshots
+
+| | |
+|---|---|
+| ![Home page](docs/screenshots/home.webp) | ![Best sellers](docs/screenshots/best-sellers.webp) |
+| ![Pizza menu](docs/screenshots/menu-pizza.webp) | ![Drinks menu](docs/screenshots/menu-drinks.png) |
+| ![Dessert menu](docs/screenshots/menu-dessert.webp) | |
+
 ## Features
 
 - Browse the menu (pizzas, desserts, wines, sodas, cocktails) and build a
