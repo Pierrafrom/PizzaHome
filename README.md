@@ -18,7 +18,7 @@ Built with Samuel Boix-Segura.
 
 - Browse the menu (pizzas, desserts, wines, sodas, cocktails) and build a
   custom pizza from individual ingredients.
-- Cart and checkout, with client accounts (JWT-based sessions) or
+- Cart and checkout, with client accounts (PHP session-based auth) or
   guest checkout.
 - An admin dashboard — sales/product/revenue charts backed directly by
   PizzeriaDB's reporting views, catalogue management (add/edit/spotlight/
@@ -43,14 +43,15 @@ views/            page templates rendered by the controllers
 ## Stack
 
 PHP (PSR-4 autoloading via Composer), MySQL/MariaDB (via `PizzeriaDB`),
-`vlucas/phpdotenv` for config, `firebase/php-jwt` for auth, `filp/whoops`
-for dev-time error pages, vanilla JS + Chart.js for the admin dashboard.
+`vlucas/phpdotenv` for config, `filp/whoops` for dev-time error pages,
+vanilla JS + Chart.js for the admin dashboard.
 
 ## Setup
 
 ```bash
 composer install
-cp .env.example .env   # DB credentials, JWT secret
+cp config/db_config.example.php config/db_config.php   # fill in DB credentials
+cp config/.env.example config/.env                     # set ENVIRONMENT
 # load the schema from https://github.com/Pierrafrom/PizzeriaDB first
 ```
 
